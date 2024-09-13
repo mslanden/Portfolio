@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
+import { isValidMove, isOpponentPiece, isInCheck } from '../utils/chessUtils';
 
 const ChessGame = () => {
   const initialBoard = [
@@ -15,13 +16,40 @@ const ChessGame = () => {
 
   const [board, setBoard] = useState(initialBoard);
   const [selectedPiece, setSelectedPiece] = useState(null);
+  const [isWhiteTurn, setIsWhiteTurn] = useState(true);
+  const [message, setMessage] = useState('White to move');
+
+  useEffect(() => {
+    if (isInCheck(board, isWhiteTurn)) {
+      setMessage(`${isWhiteTurn ? 'White' : 'Black'} is in check!`);
+    } else {
+      setMessage(`${isWhiteTurn ? 'White' : 'Black'} to move`);
+    }
+  }, [board, isWhiteTurn]);
 
   const handleCellClick = (row, col) => {
     if (selectedPiece) {
-      const newBoard = [...board];
-      newBoard[row][col] = board[selectedPiece.row][selectedPiece.col];
-      newBoard[selectedPiece.row][selectedPiece.col] = '';
-      setBoard(newBoard);
+      const piece = board[selectedPiece.row][selectedPiece.col];
+      const isWhitePiece = piece.charCodeAt(0) >= 9812 && piece.charCodeAt(0) <= 9817;
+
+      if ((isWhiteTurn && isWhitePiece) || (!isWhiteTurn && !isWhitePiece)) {
+        if (isValidMove(piece, selectedPiece.row, selectedPiece.col, row, col, board)) {
+          const newBoard = [...board];
+          newBoard[row][col] = piece;
+          newBoard[selectedPiece.row][selectedPiece.col] = '';
+
+          if (!isInCheck(newBoard, !isWhiteTurn)) {
+            setBoard(newBoard);
+            setIsWhiteTurn(!isWhiteTurn);
+          } else {
+            setMessage("Invalid move: King would be in check");
+          }
+        } else {
+          setMessage("Invalid move");
+        }
+      } else {
+        setMessage("It's not your turn");
+      }
       setSelectedPiece(null);
     } else if (board[row][col]) {
       setSelectedPiece({ row, col });
@@ -31,6 +59,8 @@ const ChessGame = () => {
   const resetGame = () => {
     setBoard(initialBoard);
     setSelectedPiece(null);
+    setIsWhiteTurn(true);
+    setMessage('White to move');
   };
 
   return (
@@ -50,6 +80,7 @@ const ChessGame = () => {
           ))
         )}
       </div>
+      <p className="mb-4">{message}</p>
       <Button onClick={resetGame}>Reset Game</Button>
     </div>
   );
