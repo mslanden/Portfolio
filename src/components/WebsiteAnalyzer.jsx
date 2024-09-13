@@ -32,6 +32,16 @@ const WebsiteAnalyzer = () => {
         opportunities: ['Enhance accessibility features', 'Expand content strategy'],
         threats: ['Competitor B has better overall scores'],
       },
+      marketValue: {
+        estimatedValue: Math.floor(Math.random() * 1000000) + 500000, // Random value between 500,000 and 1,500,000
+        factors: [
+          'Domain authority',
+          'Traffic volume',
+          'Revenue potential',
+          'Brand recognition'
+        ],
+        potentialGrowth: Math.floor(Math.random() * 50) + 10 // Random growth percentage between 10% and 60%
+      }
     };
 
     setAnalysis(mockAnalysis);
@@ -140,6 +150,28 @@ const WebsiteAnalyzer = () => {
                 </>
               ) : (
                 <p>No business plan data available.</p>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Market Value Analysis</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {analysis.marketValue ? (
+                <>
+                  <p className="text-xl font-bold mb-2">Estimated Value: ${analysis.marketValue.estimatedValue.toLocaleString()}</p>
+                  <h3 className="font-semibold mt-4">Key Factors:</h3>
+                  <ul className="list-disc pl-5 mb-2">
+                    {analysis.marketValue.factors.map((factor, index) => (
+                      <li key={index}>{factor}</li>
+                    ))}
+                  </ul>
+                  <p className="mt-4">Potential Growth: {analysis.marketValue.potentialGrowth}% annually</p>
+                </>
+              ) : (
+                <p>No market value data available.</p>
               )}
             </CardContent>
           </Card>
