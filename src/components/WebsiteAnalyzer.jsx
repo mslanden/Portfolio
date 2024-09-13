@@ -41,7 +41,30 @@ const WebsiteAnalyzer = () => {
           'Brand recognition'
         ],
         potentialGrowth: Math.floor(Math.random() * 50) + 10 // Random growth percentage between 10% and 60%
-      }
+      },
+      similarCompanies: [
+        {
+          name: 'Similar Company 1',
+          url: 'https://similarcompany1.com',
+          marketCap: Math.floor(Math.random() * 1000000000) + 100000000,
+          revenue: Math.floor(Math.random() * 100000000) + 10000000,
+          employees: Math.floor(Math.random() * 1000) + 100,
+        },
+        {
+          name: 'Similar Company 2',
+          url: 'https://similarcompany2.com',
+          marketCap: Math.floor(Math.random() * 1000000000) + 100000000,
+          revenue: Math.floor(Math.random() * 100000000) + 10000000,
+          employees: Math.floor(Math.random() * 1000) + 100,
+        },
+        {
+          name: 'Similar Company 3',
+          url: 'https://similarcompany3.com',
+          marketCap: Math.floor(Math.random() * 1000000000) + 100000000,
+          revenue: Math.floor(Math.random() * 100000000) + 10000000,
+          employees: Math.floor(Math.random() * 1000) + 100,
+        },
+      ],
     };
 
     setAnalysis(mockAnalysis);
@@ -172,6 +195,29 @@ const WebsiteAnalyzer = () => {
                 </>
               ) : (
                 <p>No market value data available.</p>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Similar Companies Analysis</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {analysis.similarCompanies && analysis.similarCompanies.length > 0 ? (
+                <div className="space-y-4">
+                  {analysis.similarCompanies.map((company, index) => (
+                    <div key={index} className="border-b pb-4 last:border-b-0">
+                      <h3 className="font-semibold text-lg">{company.name}</h3>
+                      <p>Website: <a href={company.url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">{company.url}</a></p>
+                      <p>Market Cap: ${company.marketCap.toLocaleString()}</p>
+                      <p>Annual Revenue: ${company.revenue.toLocaleString()}</p>
+                      <p>Employees: {company.employees}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p>No similar companies data available.</p>
               )}
             </CardContent>
           </Card>
