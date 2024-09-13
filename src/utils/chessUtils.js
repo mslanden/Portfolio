@@ -2,6 +2,11 @@ const isValidMove = (piece, startRow, startCol, endRow, endCol, board) => {
   const rowDiff = Math.abs(endRow - startRow);
   const colDiff = Math.abs(endCol - startCol);
 
+  // Check if the target square contains a friendly piece
+  if (board[endRow][endCol] && !isOpponentPiece(piece, board[endRow][endCol])) {
+    return false;
+  }
+
   switch (piece.toLowerCase()) {
     case '♟':
     case '♙':
@@ -96,4 +101,39 @@ const isInCheck = (board, isWhiteTurn) => {
   return false;
 };
 
-export { isValidMove, isOpponentPiece, isInCheck };
+const getRandomMove = (board, isWhiteTurn) => {
+  const pieces = [];
+  for (let row = 0; row < 8; row++) {
+    for (let col = 0; col < 8; col++) {
+      const piece = board[row][col];
+      if (piece && ((isWhiteTurn && piece.charCodeAt(0) >= 9812 && piece.charCodeAt(0) <= 9817) ||
+                    (!isWhiteTurn && piece.charCodeAt(0) >= 9818 && piece.charCodeAt(0) <= 9823))) {
+        pieces.push({ piece, row, col });
+      }
+    }
+  }
+
+  while (pieces.length > 0) {
+    const randomIndex = Math.floor(Math.random() * pieces.length);
+    const { piece, row, col } = pieces[randomIndex];
+
+    for (let endRow = 0; endRow < 8; endRow++) {
+      for (let endCol = 0; endCol < 8; endCol++) {
+        if (isValidMove(piece, row, col, endRow, endCol, board)) {
+          const newBoard = board.map(row => [...row]);
+          newBoard[endRow][endCol] = piece;
+          newBoard[row][col] = '';
+          if (!isInCheck(newBoard, !isWhiteTurn)) {
+            return { startRow: row, startCol: col, endRow, endCol };
+          }
+        }
+      }
+    }
+
+    pieces.splice(randomIndex, 1);
+  }
+
+  return null; // No valid moves found
+};
+
+export { isValidMove, isOpponentPiece, isInCheck, getRandomMove };

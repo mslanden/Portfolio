@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { isValidMove, isOpponentPiece, isInCheck } from '../utils/chessUtils';
+import { isValidMove, isOpponentPiece, isInCheck, getRandomMove } from '../utils/chessUtils';
 
 const ChessGame = () => {
   const initialBoard = [
@@ -17,30 +17,33 @@ const ChessGame = () => {
   const [board, setBoard] = useState(initialBoard);
   const [selectedPiece, setSelectedPiece] = useState(null);
   const [isWhiteTurn, setIsWhiteTurn] = useState(true);
-  const [message, setMessage] = useState('White to move');
+  const [message, setMessage] = useState('Your turn (White)');
+  const [isGameOver, setIsGameOver] = useState(false);
 
   useEffect(() => {
-    if (isInCheck(board, isWhiteTurn)) {
-      setMessage(`${isWhiteTurn ? 'White' : 'Black'} is in check!`);
-    } else {
-      setMessage(`${isWhiteTurn ? 'White' : 'Black'} to move`);
+    if (!isWhiteTurn && !isGameOver) {
+      setTimeout(makeAIMove, 500);
     }
-  }, [board, isWhiteTurn]);
+  }, [isWhiteTurn, isGameOver]);
 
   const handleCellClick = (row, col) => {
+    if (isGameOver || !isWhiteTurn) return;
+
     if (selectedPiece) {
       const piece = board[selectedPiece.row][selectedPiece.col];
       const isWhitePiece = piece.charCodeAt(0) >= 9812 && piece.charCodeAt(0) <= 9817;
 
-      if ((isWhiteTurn && isWhitePiece) || (!isWhiteTurn && !isWhitePiece)) {
+      if (isWhitePiece) {
         if (isValidMove(piece, selectedPiece.row, selectedPiece.col, row, col, board)) {
-          const newBoard = [...board];
+          const newBoard = board.map(row => [...row]);
           newBoard[row][col] = piece;
           newBoard[selectedPiece.row][selectedPiece.col] = '';
 
-          if (!isInCheck(newBoard, !isWhiteTurn)) {
+          if (!isInCheck(newBoard, false)) {
             setBoard(newBoard);
-            setIsWhiteTurn(!isWhiteTurn);
+            setIsWhiteTurn(false);
+            setMessage("AI's turn (Black)");
+            checkGameState(newBoard, false);
           } else {
             setMessage("Invalid move: King would be in check");
           }
@@ -48,11 +51,46 @@ const ChessGame = () => {
           setMessage("Invalid move");
         }
       } else {
-        setMessage("It's not your turn");
+        setMessage("It's your turn (White)");
       }
       setSelectedPiece(null);
-    } else if (board[row][col]) {
+    } else if (board[row][col] && board[row][col].charCodeAt(0) >= 9812 && board[row][col].charCodeAt(0) <= 9817) {
       setSelectedPiece({ row, col });
+    }
+  };
+
+  const makeAIMove = () => {
+    const move = getRandomMove(board, false);
+    if (move) {
+      const { startRow, startCol, endRow, endCol } = move;
+      const newBoard = board.map(row => [...row]);
+      newBoard[endRow][endCol] = newBoard[startRow][startCol];
+      newBoard[startRow][startCol] = '';
+      setBoard(newBoard);
+      setIsWhiteTurn(true);
+      setMessage("Your turn (White)");
+      checkGameState(newBoard, true);
+    } else {
+      setIsGameOver(true);
+      setMessage("Game over: Stalemate");
+    }
+  };
+
+  const checkGameState = (newBoard, isWhiteTurn) => {
+    if (isInCheck(newBoard, isWhiteTurn)) {
+      const hasValidMove = getRandomMove(newBoard, isWhiteTurn) !== null;
+      if (!hasValidMove) {
+        setIsGameOver(true);
+        setMessage(`Checkmate! ${isWhiteTurn ? 'Black' : 'White'} wins!`);
+      } else {
+        setMessage(`${isWhiteTurn ? 'White' : 'Black'} is in check!`);
+      }
+    } else {
+      const hasValidMove = getRandomMove(newBoard, isWhiteTurn) !== null;
+      if (!hasValidMove) {
+        setIsGameOver(true);
+        setMessage("Game over: Stalemate");
+      }
     }
   };
 
@@ -60,7 +98,8 @@ const ChessGame = () => {
     setBoard(initialBoard);
     setSelectedPiece(null);
     setIsWhiteTurn(true);
-    setMessage('White to move');
+    setMessage('Your turn (White)');
+    setIsGameOver(false);
   };
 
   return (
