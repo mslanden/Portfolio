@@ -1,0 +1,117 @@
+import React, { useState } from 'react';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+
+const WebsiteAnalyzer = () => {
+  const [url, setUrl] = useState('');
+  const [analysis, setAnalysis] = useState(null);
+
+  const analyzeWebsite = () => {
+    // In a real application, this would make an API call to perform the analysis
+    // For this example, we'll use mock data
+    const mockAnalysis = {
+      seoScore: 85,
+      performanceScore: 92,
+      accessibilityScore: 78,
+      competitorComparison: [
+        { name: 'Your Site', seo: 85, performance: 92, accessibility: 78 },
+        { name: 'Competitor A', seo: 80, performance: 88, accessibility: 75 },
+        { name: 'Competitor B', seo: 88, performance: 90, accessibility: 82 },
+      ],
+      businessPlan: {
+        strengths: ['Strong SEO', 'Excellent performance'],
+        weaknesses: ['Accessibility could be improved'],
+        opportunities: ['Enhance accessibility features', 'Expand content strategy'],
+        threats: ['Competitor B has better overall scores'],
+      },
+    };
+
+    setAnalysis(mockAnalysis);
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex space-x-4">
+        <Input
+          type="text"
+          placeholder="Enter website URL"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          className="flex-grow"
+        />
+        <Button onClick={analyzeWebsite}>Analyze</Button>
+      </div>
+
+      {analysis && (
+        <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Website Analysis Results</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p>SEO Score: {analysis.seoScore}</p>
+              <p>Performance Score: {analysis.performanceScore}</p>
+              <p>Accessibility Score: {analysis.accessibilityScore}</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Competitor Comparison</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={analysis.competitorComparison}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Bar dataKey="seo" fill="#8884d8" />
+                  <Bar dataKey="performance" fill="#82ca9d" />
+                  <Bar dataKey="accessibility" fill="#ffc658" />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Business Plan</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <h3 className="font-semibold">Strengths:</h3>
+              <ul className="list-disc pl-5 mb-2">
+                {analysis.businessPlan.strengths.map((strength, index) => (
+                  <li key={index}>{strength}</li>
+                ))}
+              </ul>
+              <h3 className="font-semibold">Weaknesses:</h3>
+              <ul className="list-disc pl-5 mb-2">
+                {analysis.businessPlan.weaknesses.map((weakness, index) => (
+                  <li key={index}>{weakness}</li>
+                ))}
+              </ul>
+              <h3 className="font-semibold">Opportunities:</h3>
+              <ul className="list-disc pl-5 mb-2">
+                {analysis.businessPlan.opportunities.map((opportunity, index) => (
+                  <li key={index}>{opportunity}</li>
+                ))}
+              </ul>
+              <h3 className="font-semibold">Threats:</h3>
+              <ul className="list-disc pl-5 mb-2">
+                {analysis.businessPlan.threats.map((threat, index) => (
+                  <li key={index}>{threat}</li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default WebsiteAnalyzer;
