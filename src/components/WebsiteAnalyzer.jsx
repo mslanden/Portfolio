@@ -15,10 +15,16 @@ const WebsiteAnalyzer = () => {
       seoScore: 85,
       performanceScore: 92,
       accessibilityScore: 78,
+      competitors: [
+        { name: 'Competitor A', url: 'https://competitora.com' },
+        { name: 'Competitor B', url: 'https://competitorb.com' },
+        { name: 'Competitor C', url: 'https://competitorc.com' },
+      ],
       competitorComparison: [
         { name: 'Your Site', seo: 85, performance: 92, accessibility: 78 },
         { name: 'Competitor A', seo: 80, performance: 88, accessibility: 75 },
         { name: 'Competitor B', seo: 88, performance: 90, accessibility: 82 },
+        { name: 'Competitor C', seo: 82, performance: 85, accessibility: 80 },
       ],
       businessPlan: {
         strengths: ['Strong SEO', 'Excellent performance'],
@@ -54,6 +60,21 @@ const WebsiteAnalyzer = () => {
               <p>SEO Score: {analysis.seoScore}</p>
               <p>Performance Score: {analysis.performanceScore}</p>
               <p>Accessibility Score: {analysis.accessibilityScore}</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Competitors Analyzed</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="list-disc pl-5">
+                {analysis.competitors.map((competitor, index) => (
+                  <li key={index}>
+                    {competitor.name} - <a href={competitor.url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">{competitor.url}</a>
+                  </li>
+                ))}
+              </ul>
             </CardContent>
           </Card>
 
