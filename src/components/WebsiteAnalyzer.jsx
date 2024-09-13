@@ -68,13 +68,17 @@ const WebsiteAnalyzer = () => {
               <CardTitle>Competitors Analyzed</CardTitle>
             </CardHeader>
             <CardContent>
-              <ul className="list-disc pl-5">
-                {analysis.competitors.map((competitor, index) => (
-                  <li key={index}>
-                    {competitor.name} - <a href={competitor.url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">{competitor.url}</a>
-                  </li>
-                ))}
-              </ul>
+              {analysis.competitors && analysis.competitors.length > 0 ? (
+                <ul className="list-disc pl-5">
+                  {analysis.competitors.map((competitor, index) => (
+                    <li key={index}>
+                      {competitor.name} - <a href={competitor.url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">{competitor.url}</a>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No competitors analyzed.</p>
+              )}
             </CardContent>
           </Card>
 
@@ -83,18 +87,22 @@ const WebsiteAnalyzer = () => {
               <CardTitle>Competitor Comparison</CardTitle>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={analysis.competitorComparison}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="seo" fill="#8884d8" />
-                  <Bar dataKey="performance" fill="#82ca9d" />
-                  <Bar dataKey="accessibility" fill="#ffc658" />
-                </BarChart>
-              </ResponsiveContainer>
+              {analysis.competitorComparison && analysis.competitorComparison.length > 0 ? (
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={analysis.competitorComparison}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="seo" fill="#8884d8" />
+                    <Bar dataKey="performance" fill="#82ca9d" />
+                    <Bar dataKey="accessibility" fill="#ffc658" />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <p>No competitor comparison data available.</p>
+              )}
             </CardContent>
           </Card>
 
@@ -103,30 +111,36 @@ const WebsiteAnalyzer = () => {
               <CardTitle>Business Plan</CardTitle>
             </CardHeader>
             <CardContent>
-              <h3 className="font-semibold">Strengths:</h3>
-              <ul className="list-disc pl-5 mb-2">
-                {analysis.businessPlan.strengths.map((strength, index) => (
-                  <li key={index}>{strength}</li>
-                ))}
-              </ul>
-              <h3 className="font-semibold">Weaknesses:</h3>
-              <ul className="list-disc pl-5 mb-2">
-                {analysis.businessPlan.weaknesses.map((weakness, index) => (
-                  <li key={index}>{weakness}</li>
-                ))}
-              </ul>
-              <h3 className="font-semibold">Opportunities:</h3>
-              <ul className="list-disc pl-5 mb-2">
-                {analysis.businessPlan.opportunities.map((opportunity, index) => (
-                  <li key={index}>{opportunity}</li>
-                ))}
-              </ul>
-              <h3 className="font-semibold">Threats:</h3>
-              <ul className="list-disc pl-5 mb-2">
-                {analysis.businessPlan.threats.map((threat, index) => (
-                  <li key={index}>{threat}</li>
-                ))}
-              </ul>
+              {analysis.businessPlan ? (
+                <>
+                  <h3 className="font-semibold">Strengths:</h3>
+                  <ul className="list-disc pl-5 mb-2">
+                    {analysis.businessPlan.strengths.map((strength, index) => (
+                      <li key={index}>{strength}</li>
+                    ))}
+                  </ul>
+                  <h3 className="font-semibold">Weaknesses:</h3>
+                  <ul className="list-disc pl-5 mb-2">
+                    {analysis.businessPlan.weaknesses.map((weakness, index) => (
+                      <li key={index}>{weakness}</li>
+                    ))}
+                  </ul>
+                  <h3 className="font-semibold">Opportunities:</h3>
+                  <ul className="list-disc pl-5 mb-2">
+                    {analysis.businessPlan.opportunities.map((opportunity, index) => (
+                      <li key={index}>{opportunity}</li>
+                    ))}
+                  </ul>
+                  <h3 className="font-semibold">Threats:</h3>
+                  <ul className="list-disc pl-5 mb-2">
+                    {analysis.businessPlan.threats.map((threat, index) => (
+                      <li key={index}>{threat}</li>
+                    ))}
+                  </ul>
+                </>
+              ) : (
+                <p>No business plan data available.</p>
+              )}
             </CardContent>
           </Card>
         </div>
