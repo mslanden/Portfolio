@@ -5,6 +5,8 @@ const PongGame = () => {
   const canvasRef = useRef(null);
   const [gameStarted, setGameStarted] = useState(false);
   const [score, setScore] = useState({ player: 0, computer: 0 });
+  const [explosionParticles, setExplosionParticles] = useState([]);
+  const [isDelayed, setIsDelayed] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -28,7 +30,6 @@ const PongGame = () => {
     };
 
     let particles = [];
-    let explosionParticles = [];
 
     const drawRect = (x, y, w, h, color) => {
       context.fillStyle = color;
@@ -66,7 +67,7 @@ const PongGame = () => {
     };
 
     const update = () => {
-      if (gameStarted) {
+      if (gameStarted && !isDelayed) {
         ball.x += ball.velocityX;
         ball.y += ball.velocityY;
 
@@ -99,14 +100,18 @@ const PongGame = () => {
         paddle.computer.y += (ball.y - (paddle.computer.y + paddle.height / 2)) * 0.1;
 
         // Update score and create explosion
-        if (ball.x - ball.radius < 0) {
-          setScore(prevScore => ({ ...prevScore, computer: prevScore.computer + 1 }));
-          explosionParticles = createExplosion(ball.x, ball.y);
-          resetBall();
-        } else if (ball.x + ball.radius > canvas.width) {
-          setScore(prevScore => ({ ...prevScore, player: prevScore.player + 1 }));
-          explosionParticles = createExplosion(ball.x, ball.y);
-          resetBall();
+        if (ball.x - ball.radius < 0 || ball.x + ball.radius > canvas.width) {
+          if (ball.x - ball.radius < 0) {
+            setScore(prevScore => ({ ...prevScore, computer: prevScore.computer + 1 }));
+          } else {
+            setScore(prevScore => ({ ...prevScore, player: prevScore.player + 1 }));
+          }
+          setExplosionParticles(createExplosion(ball.x, ball.y));
+          setIsDelayed(true);
+          setTimeout(() => {
+            setIsDelayed(false);
+            resetBall();
+          }, 1000); // 1 second delay
         }
 
         // Update particles
@@ -118,12 +123,14 @@ const PongGame = () => {
         }));
 
         // Update explosion particles
-        explosionParticles = explosionParticles.filter(particle => particle.life > 0).map(particle => ({
-          ...particle,
-          x: particle.x + particle.speedX,
-          y: particle.y + particle.speedY,
-          life: particle.life - 1
-        }));
+        setExplosionParticles(prevParticles => 
+          prevParticles.filter(particle => particle.life > 0).map(particle => ({
+            ...particle,
+            x: particle.x + particle.speedX,
+            y: particle.y + particle.speedY,
+            life: particle.life - 1
+          }))
+        );
       }
     };
 
@@ -179,7 +186,7 @@ const PongGame = () => {
       cancelAnimationFrame(animationFrameId);
       canvas.removeEventListener('mousemove', handleMouseMove);
     };
-  }, [gameStarted, score]);
+  }, [gameStarted, score, explosionParticles, isDelayed]);
 
   return (
     <div className="flex flex-col items-center">
