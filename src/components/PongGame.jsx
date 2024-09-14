@@ -6,6 +6,7 @@ const PongGame = () => {
   const [gameStarted, setGameStarted] = useState(false);
   const [score, setScore] = useState({ player: 0, computer: 0 });
   const [explosionVisible, setExplosionVisible] = useState(false); // Track if explosion is visible
+  const [ballPaused, setBallPaused] = useState(false); // Track if the ball is paused for the explosion
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -79,7 +80,7 @@ const PongGame = () => {
     };
 
     const update = () => {
-      if (!gameStarted) return;
+      if (!gameStarted || ballPaused) return; // Don't update the ball if it's paused during explosion
 
       ball.x += ball.velocityX;
       ball.y += ball.velocityY;
@@ -117,18 +118,22 @@ const PongGame = () => {
         setScore(prevScore => ({ ...prevScore, computer: prevScore.computer + 1 }));
         explosionParticles = createExplosion(ball.x, ball.y);
         setExplosionVisible(true);
+        setBallPaused(true); // Pause the ball
         setTimeout(() => {
           setExplosionVisible(false);
           resetBall();
-        }, 3000); // 3 second delay before reset
+          setBallPaused(false); // Resume ball after delay
+        }, 500); // 0.5 second delay before reset
       } else if (ball.x + ball.radius > canvas.width) {
         setScore(prevScore => ({ ...prevScore, player: prevScore.player + 1 }));
         explosionParticles = createExplosion(ball.x, ball.y);
         setExplosionVisible(true);
+        setBallPaused(true); // Pause the ball
         setTimeout(() => {
           setExplosionVisible(false);
           resetBall();
-        }, 3000); // 3 second delay before reset
+          setBallPaused(false); // Resume ball after delay
+        }, 500); // 0.5 second delay before reset
       }
 
       // Update particles
@@ -213,7 +218,7 @@ const PongGame = () => {
       canvas.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [gameStarted, score, explosionVisible]);
+  }, [gameStarted, score, explosionVisible, ballPaused]);
 
   return (
     <div className="flex flex-col items-center">
