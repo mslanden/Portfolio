@@ -66,72 +66,70 @@ const PongGame = () => {
       ball.speed = 7;
     };
 
-    const update = () => {
-      if (gameStarted && !isDelayed) {
-        ball.x += ball.velocityX;
-        ball.y += ball.velocityY;
+    const updateGameState = () => {
+      ball.x += ball.velocityX;
+      ball.y += ball.velocityY;
 
-        // Top and bottom walls
-        if (ball.y + ball.radius > canvas.height || ball.y - ball.radius < 0) {
-          ball.velocityY = -ball.velocityY;
+      // Top and bottom walls
+      if (ball.y + ball.radius > canvas.height || ball.y - ball.radius < 0) {
+        ball.velocityY = -ball.velocityY;
+      }
+
+      // Determine which paddle is being hit
+      let player = ball.x < canvas.width / 2 ? paddle.player : paddle.computer;
+
+      // Check for paddle collision
+      if (collision(ball, { x: ball.x < canvas.width / 2 ? 0 : canvas.width - paddle.width, y: player.y })) {
+        let collidePoint = ball.y - (player.y + paddle.height / 2);
+        collidePoint = collidePoint / (paddle.height / 2);
+        
+        let angleRad = (Math.PI / 4) * collidePoint;
+        let direction = ball.x < canvas.width / 2 ? 1 : -1;
+        
+        ball.velocityX = direction * ball.speed * Math.cos(angleRad);
+        ball.velocityY = ball.speed * Math.sin(angleRad);
+        
+        ball.speed += 0.1;
+
+        // Create particles on collision
+        particles = particles.concat(createParticles(ball.x, ball.y, 20));
+      }
+
+      // Move computer paddle
+      paddle.computer.y += (ball.y - (paddle.computer.y + paddle.height / 2)) * 0.1;
+
+      // Update score and create explosion
+      if (ball.x - ball.radius < 0 || ball.x + ball.radius > canvas.width) {
+        if (ball.x - ball.radius < 0) {
+          setScore(prevScore => ({ ...prevScore, computer: prevScore.computer + 1 }));
+        } else {
+          setScore(prevScore => ({ ...prevScore, player: prevScore.player + 1 }));
         }
+        setExplosionParticles(createExplosion(ball.x, ball.y));
+        setIsDelayed(true);
+        setTimeout(() => {
+          setIsDelayed(false);
+          resetBall();
+        }, 1000); // 1 second delay
+      }
 
-        // Determine which paddle is being hit
-        let player = ball.x < canvas.width / 2 ? paddle.player : paddle.computer;
+      // Update particles
+      particles = particles.filter(particle => particle.life > 0).map(particle => ({
+        ...particle,
+        x: particle.x + particle.speedX,
+        y: particle.y + particle.speedY,
+        life: particle.life - 1
+      }));
 
-        // Check for paddle collision
-        if (collision(ball, { x: ball.x < canvas.width / 2 ? 0 : canvas.width - paddle.width, y: player.y })) {
-          let collidePoint = ball.y - (player.y + paddle.height / 2);
-          collidePoint = collidePoint / (paddle.height / 2);
-          
-          let angleRad = (Math.PI / 4) * collidePoint;
-          let direction = ball.x < canvas.width / 2 ? 1 : -1;
-          
-          ball.velocityX = direction * ball.speed * Math.cos(angleRad);
-          ball.velocityY = ball.speed * Math.sin(angleRad);
-          
-          ball.speed += 0.1;
-
-          // Create particles on collision
-          particles = particles.concat(createParticles(ball.x, ball.y, 20));
-        }
-
-        // Move computer paddle
-        paddle.computer.y += (ball.y - (paddle.computer.y + paddle.height / 2)) * 0.1;
-
-        // Update score and create explosion
-        if (ball.x - ball.radius < 0 || ball.x + ball.radius > canvas.width) {
-          if (ball.x - ball.radius < 0) {
-            setScore(prevScore => ({ ...prevScore, computer: prevScore.computer + 1 }));
-          } else {
-            setScore(prevScore => ({ ...prevScore, player: prevScore.player + 1 }));
-          }
-          setExplosionParticles(createExplosion(ball.x, ball.y));
-          setIsDelayed(true);
-          setTimeout(() => {
-            setIsDelayed(false);
-            resetBall();
-          }, 1000); // 1 second delay
-        }
-
-        // Update particles
-        particles = particles.filter(particle => particle.life > 0).map(particle => ({
+      // Update explosion particles
+      setExplosionParticles(prevParticles => 
+        prevParticles.filter(particle => particle.life > 0).map(particle => ({
           ...particle,
           x: particle.x + particle.speedX,
           y: particle.y + particle.speedY,
           life: particle.life - 1
-        }));
-
-        // Update explosion particles
-        setExplosionParticles(prevParticles => 
-          prevParticles.filter(particle => particle.life > 0).map(particle => ({
-            ...particle,
-            x: particle.x + particle.speedX,
-            y: particle.y + particle.speedY,
-            life: particle.life - 1
-          }))
-        );
-      }
+        }))
+      );
     };
 
     const render = () => {
@@ -164,7 +162,9 @@ const PongGame = () => {
     };
 
     const gameLoop = () => {
-      update();
+      if (gameStarted && !isDelayed) {
+        updateGameState();
+      }
       render();
       animationFrameId = requestAnimationFrame(gameLoop);
     };
@@ -176,11 +176,7 @@ const PongGame = () => {
 
     canvas.addEventListener('mousemove', handleMouseMove);
 
-    if (gameStarted) {
-      gameLoop();
-    } else {
-      render(); // Render initial state
-    }
+    gameLoop();
 
     return () => {
       cancelAnimationFrame(animationFrameId);
