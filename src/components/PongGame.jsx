@@ -11,11 +11,16 @@ const PongGame = () => {
     const context = canvas.getContext('2d');
     let animationFrameId;
 
+    // Dynamic canvas sizing
+    canvas.width = window.innerWidth * 0.8;
+    canvas.height = window.innerHeight * 0.6;
+
     const paddle = {
       width: 10,
       height: 100,
-      player: { y: 150 },
-      computer: { y: 150 },
+      player: { y: canvas.height / 2 - 50 },
+      computer: { y: canvas.height / 2 - 50 },
+      speed: 7,  // For player keyboard control
     };
 
     const ball = {
@@ -66,65 +71,65 @@ const PongGame = () => {
     };
 
     const update = () => {
-      if (gameStarted) {
-        ball.x += ball.velocityX;
-        ball.y += ball.velocityY;
+      if (!gameStarted) return;
 
-        // Top and bottom walls
-        if (ball.y + ball.radius > canvas.height || ball.y - ball.radius < 0) {
-          ball.velocityY = -ball.velocityY;
-        }
+      ball.x += ball.velocityX;
+      ball.y += ball.velocityY;
 
-        // Determine which paddle is being hit
-        let player = ball.x < canvas.width / 2 ? paddle.player : paddle.computer;
-
-        // Check for paddle collision
-        if (collision(ball, { x: ball.x < canvas.width / 2 ? 0 : canvas.width - paddle.width, y: player.y })) {
-          let collidePoint = ball.y - (player.y + paddle.height / 2);
-          collidePoint = collidePoint / (paddle.height / 2);
-          
-          let angleRad = (Math.PI / 4) * collidePoint;
-          let direction = ball.x < canvas.width / 2 ? 1 : -1;
-          
-          ball.velocityX = direction * ball.speed * Math.cos(angleRad);
-          ball.velocityY = ball.speed * Math.sin(angleRad);
-          
-          ball.speed += 0.1;
-
-          // Create particles on collision
-          particles = particles.concat(createParticles(ball.x, ball.y, 20));
-        }
-
-        // Move computer paddle
-        paddle.computer.y += (ball.y - (paddle.computer.y + paddle.height / 2)) * 0.1;
-
-        // Update score and create explosion
-        if (ball.x - ball.radius < 0) {
-          setScore(prevScore => ({ ...prevScore, computer: prevScore.computer + 1 }));
-          explosionParticles = createExplosion(ball.x, ball.y);
-          resetBall();
-        } else if (ball.x + ball.radius > canvas.width) {
-          setScore(prevScore => ({ ...prevScore, player: prevScore.player + 1 }));
-          explosionParticles = createExplosion(ball.x, ball.y);
-          resetBall();
-        }
-
-        // Update particles
-        particles = particles.filter(particle => particle.life > 0).map(particle => ({
-          ...particle,
-          x: particle.x + particle.speedX,
-          y: particle.y + particle.speedY,
-          life: particle.life - 1
-        }));
-
-        // Update explosion particles
-        explosionParticles = explosionParticles.filter(particle => particle.life > 0).map(particle => ({
-          ...particle,
-          x: particle.x + particle.speedX,
-          y: particle.y + particle.speedY,
-          life: particle.life - 1
-        }));
+      // Top and bottom walls
+      if (ball.y + ball.radius > canvas.height || ball.y - ball.radius < 0) {
+        ball.velocityY = -ball.velocityY;
       }
+
+      // Determine which paddle is being hit
+      let player = ball.x < canvas.width / 2 ? paddle.player : paddle.computer;
+
+      // Check for paddle collision
+      if (collision(ball, { x: ball.x < canvas.width / 2 ? 0 : canvas.width - paddle.width, y: player.y })) {
+        let collidePoint = ball.y - (player.y + paddle.height / 2);
+        collidePoint = collidePoint / (paddle.height / 2);
+        let angleRad = (Math.PI / 4) * collidePoint;
+        let direction = ball.x < canvas.width / 2 ? 1 : -1;
+
+        ball.velocityX = direction * ball.speed * Math.cos(angleRad);
+        ball.velocityY = ball.speed * Math.sin(angleRad);
+
+        ball.speed += 0.1;
+
+        // Create particles on collision
+        particles = particles.concat(createParticles(ball.x, ball.y, 20));
+      }
+
+      // Move computer paddle with difficulty adjustments
+      let computerSpeed = 0.07 + Math.random() * 0.03;  // Some randomness
+      paddle.computer.y += (ball.y - (paddle.computer.y + paddle.height / 2)) * computerSpeed;
+
+      // Update score and create explosion
+      if (ball.x - ball.radius < 0) {
+        setScore(prevScore => ({ ...prevScore, computer: prevScore.computer + 1 }));
+        explosionParticles = createExplosion(ball.x, ball.y);
+        resetBall();
+      } else if (ball.x + ball.radius > canvas.width) {
+        setScore(prevScore => ({ ...prevScore, player: prevScore.player + 1 }));
+        explosionParticles = createExplosion(ball.x, ball.y);
+        resetBall();
+      }
+
+      // Update particles
+      particles = particles.filter(particle => particle.life > 0).map(particle => ({
+        ...particle,
+        x: particle.x + particle.speedX,
+        y: particle.y + particle.speedY,
+        life: particle.life - 1,
+      }));
+
+      // Update explosion particles
+      explosionParticles = explosionParticles.filter(particle => particle.life > 0).map(particle => ({
+        ...particle,
+        x: particle.x + particle.speedX,
+        y: particle.y + particle.speedY,
+        life: particle.life - 1,
+      }));
     };
 
     const render = () => {
@@ -167,23 +172,34 @@ const PongGame = () => {
       paddle.player.y = e.clientY - rect.top - paddle.height / 2;
     };
 
+    const handleKeyDown = (e) => {
+      if (e.key === 'ArrowUp') {
+        paddle.player.y = Math.max(paddle.player.y - paddle.speed, 0);
+      } else if (e.key === 'ArrowDown') {
+        paddle.player.y = Math.min(paddle.player.y + paddle.speed, canvas.height - paddle.height);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
     canvas.addEventListener('mousemove', handleMouseMove);
 
     if (gameStarted) {
       gameLoop();
     } else {
+      cancelAnimationFrame(animationFrameId); // Stop animation when paused
       render(); // Render initial state
     }
 
     return () => {
       cancelAnimationFrame(animationFrameId);
       canvas.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('keydown', handleKeyDown);
     };
   }, [gameStarted, score]);
 
   return (
     <div className="flex flex-col items-center">
-      <canvas ref={canvasRef} width={700} height={400} className="border border-gray-300" />
+      <canvas ref={canvasRef} className="border border-gray-300" />
       <button
         className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
         onClick={() => setGameStarted(!gameStarted)}
