@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { createParticles } from '../utils/particleUtils';
+import { createParticles, createExplosion } from '../utils/particleUtils';
 
 const PongGame = () => {
   const canvasRef = useRef(null);
@@ -28,6 +28,7 @@ const PongGame = () => {
     };
 
     let particles = [];
+    let explosionParticles = [];
 
     const drawRect = (x, y, w, h, color) => {
       context.fillStyle = color;
@@ -91,23 +92,33 @@ const PongGame = () => {
           ball.speed += 0.1;
 
           // Create particles on collision
-          particles = particles.concat(createParticles(ball.x, ball.y, '#fff', 10));
+          particles = particles.concat(createParticles(ball.x, ball.y, 20));
         }
 
         // Move computer paddle
         paddle.computer.y += (ball.y - (paddle.computer.y + paddle.height / 2)) * 0.1;
 
-        // Update score
+        // Update score and create explosion
         if (ball.x - ball.radius < 0) {
           setScore(prevScore => ({ ...prevScore, computer: prevScore.computer + 1 }));
+          explosionParticles = createExplosion(ball.x, ball.y);
           resetBall();
         } else if (ball.x + ball.radius > canvas.width) {
           setScore(prevScore => ({ ...prevScore, player: prevScore.player + 1 }));
+          explosionParticles = createExplosion(ball.x, ball.y);
           resetBall();
         }
 
         // Update particles
         particles = particles.filter(particle => particle.life > 0).map(particle => ({
+          ...particle,
+          x: particle.x + particle.speedX,
+          y: particle.y + particle.speedY,
+          life: particle.life - 1
+        }));
+
+        // Update explosion particles
+        explosionParticles = explosionParticles.filter(particle => particle.life > 0).map(particle => ({
           ...particle,
           x: particle.x + particle.speedX,
           y: particle.y + particle.speedY,
@@ -132,6 +143,11 @@ const PongGame = () => {
 
       // Draw particles
       particles.forEach(particle => {
+        drawCircle(particle.x, particle.y, particle.size, particle.color);
+      });
+
+      // Draw explosion particles
+      explosionParticles.forEach(particle => {
         drawCircle(particle.x, particle.y, particle.size, particle.color);
       });
 
