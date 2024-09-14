@@ -5,6 +5,7 @@ const PongGame = () => {
   const canvasRef = useRef(null);
   const [gameStarted, setGameStarted] = useState(false);
   const [score, setScore] = useState({ player: 0, computer: 0 });
+  const [ballResetting, setBallResetting] = useState(false); // Track if ball is resetting
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -68,10 +69,11 @@ const PongGame = () => {
       ball.y = canvas.height / 2;
       ball.velocityX = -ball.velocityX;
       ball.speed = 7;
+      setBallResetting(false); // Ball is now reset
     };
 
     const update = () => {
-      if (!gameStarted) return;
+      if (!gameStarted || ballResetting) return; // Skip update if ball is resetting
 
       ball.x += ball.velocityX;
       ball.y += ball.velocityY;
@@ -108,11 +110,13 @@ const PongGame = () => {
       if (ball.x - ball.radius < 0) {
         setScore(prevScore => ({ ...prevScore, computer: prevScore.computer + 1 }));
         explosionParticles = createExplosion(ball.x, ball.y);
-        resetBall();
+        setBallResetting(true); // Start ball resetting process
+        setTimeout(resetBall, 1000); // Delay the reset by 1 second
       } else if (ball.x + ball.radius > canvas.width) {
         setScore(prevScore => ({ ...prevScore, player: prevScore.player + 1 }));
         explosionParticles = createExplosion(ball.x, ball.y);
-        resetBall();
+        setBallResetting(true); // Start ball resetting process
+        setTimeout(resetBall, 1000); // Delay the reset by 1 second
       }
 
       // Update particles
@@ -144,7 +148,9 @@ const PongGame = () => {
       drawRect(canvas.width - paddle.width, paddle.computer.y, paddle.width, paddle.height, '#fff');
 
       // Draw ball
-      drawCircle(ball.x, ball.y, ball.radius, '#fff');
+      if (!ballResetting) {
+        drawCircle(ball.x, ball.y, ball.radius, '#fff'); // Don't draw ball while resetting
+      }
 
       // Draw particles
       particles.forEach(particle => {
@@ -195,7 +201,7 @@ const PongGame = () => {
       canvas.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [gameStarted, score]);
+  }, [gameStarted, score, ballResetting]);
 
   return (
     <div className="flex flex-col items-center">
