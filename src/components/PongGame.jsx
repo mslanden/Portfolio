@@ -54,39 +54,12 @@ const PongGame = () => {
       drawText(score.computer, 3 * canvas.width / 4, canvas.height / 5, '#fff');
     };
 
-    const update = () => {
-      if (gameStarted) {
-        ball.x += ball.velocityX;
-        ball.y += ball.velocityY;
-
-        if (ball.y + ball.radius > canvas.height || ball.y - ball.radius < 0) {
-          ball.velocityY = -ball.velocityY;
-        }
-
-        let player = (ball.x < canvas.width / 2) ? paddle.player : paddle.computer;
-
-        if (collision(ball, player)) {
-          ball.velocityX = -ball.velocityX;
-        }
-
-        paddle.computer.y += (ball.y - (paddle.computer.y + paddle.height / 2)) * 0.1;
-
-        if (ball.x - ball.radius < 0) {
-          setScore(prevScore => ({ ...prevScore, computer: prevScore.computer + 1 }));
-          resetBall();
-        } else if (ball.x + ball.radius > canvas.width) {
-          setScore(prevScore => ({ ...prevScore, player: prevScore.player + 1 }));
-          resetBall();
-        }
-      }
-    };
-
     const collision = (b, p) => {
       return (
-        b.x + b.radius > p.x &&
-        b.x - b.radius < p.x + paddle.width &&
         b.y + b.radius > p.y &&
-        b.y - b.radius < p.y + paddle.height
+        b.y - b.radius < p.y + paddle.height &&
+        b.x + b.radius > p.x &&
+        b.x - b.radius < p.x + paddle.width
       );
     };
 
@@ -95,6 +68,52 @@ const PongGame = () => {
       ball.y = canvas.height / 2;
       ball.velocityX = -ball.velocityX;
       ball.speed = 7;
+    };
+
+    const update = () => {
+      if (gameStarted) {
+        ball.x += ball.velocityX;
+        ball.y += ball.velocityY;
+
+        // Top and bottom walls
+        if (ball.y + ball.radius > canvas.height || ball.y - ball.radius < 0) {
+          ball.velocityY = -ball.velocityY;
+        }
+
+        // Determine which paddle is being hit
+        let player = (ball.x < canvas.width / 2) ? paddle.player : paddle.computer;
+
+        // Check for paddle collision
+        if (
+          collision(ball, {
+            x: (ball.x < canvas.width / 2) ? 0 : canvas.width - paddle.width,
+            y: player.y,
+          })
+        ) {
+          let collidePoint = ball.y - (player.y + paddle.height / 2);
+          collidePoint = collidePoint / (paddle.height / 2);
+          
+          let angleRad = (Math.PI / 4) * collidePoint;
+          let direction = (ball.x < canvas.width / 2) ? 1 : -1;
+          
+          ball.velocityX = direction * ball.speed * Math.cos(angleRad);
+          ball.velocityY = ball.speed * Math.sin(angleRad);
+          
+          ball.speed += 0.1;
+        }
+
+        // Move computer paddle
+        paddle.computer.y += (ball.y - (paddle.computer.y + paddle.height / 2)) * 0.1;
+
+        // Update score
+        if (ball.x - ball.radius < 0) {
+          setScore(prevScore => ({ ...prevScore, computer: prevScore.computer + 1 }));
+          resetBall();
+        } else if (ball.x + ball.radius > canvas.width) {
+          setScore(prevScore => ({ ...prevScore, player: prevScore.player + 1 }));
+          resetBall();
+        }
+      }
     };
 
     const gameLoop = () => {
