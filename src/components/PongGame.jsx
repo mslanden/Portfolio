@@ -5,13 +5,13 @@ const PongGame = () => {
   const canvasRef = useRef(null);
   const [gameStarted, setGameStarted] = useState(false);
   const [score, setScore] = useState({ player: 0, computer: 0 });
+  const [explosionVisible, setExplosionVisible] = useState(false); // Track if explosion is visible
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas.getContext('2d');
     let animationFrameId;
 
-    // Dynamic canvas sizing
     canvas.width = window.innerWidth * 0.8;
     canvas.height = window.innerHeight * 0.6;
 
@@ -20,13 +20,13 @@ const PongGame = () => {
       height: 100,
       player: { y: canvas.height / 2 - 50 },
       computer: { y: canvas.height / 2 - 50 },
-      speed: 7,  // For player keyboard control
+      speed: 7, // For player keyboard control
     };
 
     const ball = {
       x: canvas.width / 2,
       y: canvas.height / 2,
-      radius: 5,
+      radius: 10, // Slightly larger for effect
       speed: 7,
       velocityX: 5,
       velocityY: 5,
@@ -40,12 +40,20 @@ const PongGame = () => {
       context.fillRect(x, y, w, h);
     };
 
-    const drawCircle = (x, y, r, color) => {
-      context.fillStyle = color;
+    const drawBallWithGlow = (x, y, r, color) => {
+      // Create gradient for the glowing effect
+      const gradient = context.createRadialGradient(x, y, r * 0.3, x, y, r);
+      gradient.addColorStop(0, '#fff');
+      gradient.addColorStop(1, color);
+
+      context.shadowBlur = 15;
+      context.shadowColor = color;
+      context.fillStyle = gradient;
       context.beginPath();
       context.arc(x, y, r, 0, Math.PI * 2, false);
       context.closePath();
       context.fill();
+      context.shadowBlur = 0; // Reset shadowBlur after drawing
     };
 
     const drawText = (text, x, y, color) => {
@@ -101,18 +109,26 @@ const PongGame = () => {
       }
 
       // Move computer paddle with difficulty adjustments
-      let computerSpeed = 0.07 + Math.random() * 0.03;  // Some randomness
+      let computerSpeed = 0.07 + Math.random() * 0.03; // Some randomness
       paddle.computer.y += (ball.y - (paddle.computer.y + paddle.height / 2)) * computerSpeed;
 
       // Update score and create explosion
       if (ball.x - ball.radius < 0) {
         setScore(prevScore => ({ ...prevScore, computer: prevScore.computer + 1 }));
         explosionParticles = createExplosion(ball.x, ball.y);
-        resetBall();
+        setExplosionVisible(true);
+        setTimeout(() => {
+          setExplosionVisible(false);
+          resetBall();
+        }, 3000); // 3 second delay before reset
       } else if (ball.x + ball.radius > canvas.width) {
         setScore(prevScore => ({ ...prevScore, player: prevScore.player + 1 }));
         explosionParticles = createExplosion(ball.x, ball.y);
-        resetBall();
+        setExplosionVisible(true);
+        setTimeout(() => {
+          setExplosionVisible(false);
+          resetBall();
+        }, 3000); // 3 second delay before reset
       }
 
       // Update particles
@@ -143,18 +159,20 @@ const PongGame = () => {
       drawRect(0, paddle.player.y, paddle.width, paddle.height, '#fff');
       drawRect(canvas.width - paddle.width, paddle.computer.y, paddle.width, paddle.height, '#fff');
 
-      // Draw ball
-      drawCircle(ball.x, ball.y, ball.radius, '#fff');
+      // Draw ball with glow effect
+      drawBallWithGlow(ball.x, ball.y, ball.radius, '#00FFFF'); // Cool glow with electric cyan color
 
       // Draw particles
       particles.forEach(particle => {
         drawCircle(particle.x, particle.y, particle.size, particle.color);
       });
 
-      // Draw explosion particles
-      explosionParticles.forEach(particle => {
-        drawCircle(particle.x, particle.y, particle.size, particle.color);
-      });
+      // Draw explosion particles if visible
+      if (explosionVisible) {
+        explosionParticles.forEach(particle => {
+          drawCircle(particle.x, particle.y, particle.size, particle.color);
+        });
+      }
 
       // Draw score
       drawText(score.player, canvas.width / 4, canvas.height / 5, '#fff');
@@ -195,7 +213,7 @@ const PongGame = () => {
       canvas.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [gameStarted, score]);
+  }, [gameStarted, score, explosionVisible]);
 
   return (
     <div className="flex flex-col items-center">
