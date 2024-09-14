@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Particle, createParticles } from '../utils/particleUtils';
 
 const PongGame = () => {
   const canvasRef = useRef(null);
   const [gameStarted, setGameStarted] = useState(false);
   const [score, setScore] = useState({ player: 0, computer: 0 });
+  const [particles, setParticles] = useState([]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -52,6 +54,11 @@ const PongGame = () => {
       drawCircle(ball.x, ball.y, ball.radius, '#fff');
       drawText(score.player, canvas.width / 4, canvas.height / 5, '#fff');
       drawText(score.computer, 3 * canvas.width / 4, canvas.height / 5, '#fff');
+
+      // Draw particles
+      particles.forEach(particle => {
+        particle.draw(context);
+      });
     };
 
     const collision = (b, p) => {
@@ -100,6 +107,10 @@ const PongGame = () => {
           ball.velocityY = ball.speed * Math.sin(angleRad);
           
           ball.speed += 0.1;
+
+          // Create particles on collision
+          const newParticles = createParticles(ball.x, ball.y, '#fff', 20);
+          setParticles(prevParticles => [...prevParticles, ...newParticles]);
         }
 
         // Move computer paddle
@@ -113,6 +124,16 @@ const PongGame = () => {
           setScore(prevScore => ({ ...prevScore, player: prevScore.player + 1 }));
           resetBall();
         }
+
+        // Update particles
+        setParticles(prevParticles => 
+          prevParticles
+            .map(particle => {
+              particle.update();
+              return particle;
+            })
+            .filter(particle => particle.life > 0)
+        );
       }
     };
 
@@ -135,7 +156,7 @@ const PongGame = () => {
       cancelAnimationFrame(animationFrameId);
       canvas.removeEventListener('mousemove', handleMouseMove);
     };
-  }, [gameStarted, score]);
+  }, [gameStarted, score, particles]);
 
   return (
     <div className="flex flex-col items-center">
