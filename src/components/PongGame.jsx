@@ -5,7 +5,6 @@ const PongGame = () => {
   const canvasRef = useRef(null);
   const [gameStarted, setGameStarted] = useState(false);
   const [score, setScore] = useState({ player: 0, computer: 0 });
-  const [particles, setParticles] = useState([]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -28,6 +27,8 @@ const PongGame = () => {
       velocityY: 5,
     };
 
+    let particles = [];
+
     const drawRect = (x, y, w, h, color) => {
       context.fillStyle = color;
       context.fillRect(x, y, w, h);
@@ -45,19 +46,6 @@ const PongGame = () => {
       context.fillStyle = color;
       context.font = '45px Arial';
       context.fillText(text, x, y);
-    };
-
-    const render = () => {
-      drawRect(0, 0, canvas.width, canvas.height, '#000');
-      drawRect(0, paddle.player.y, paddle.width, paddle.height, '#fff');
-      drawRect(canvas.width - paddle.width, paddle.computer.y, paddle.width, paddle.height, '#fff');
-      drawCircle(ball.x, ball.y, ball.radius, '#fff');
-      drawText(score.player, canvas.width / 4, canvas.height / 5, '#fff');
-      drawText(score.computer, 3 * canvas.width / 4, canvas.height / 5, '#fff');
-
-      particles.forEach(particle => {
-        drawCircle(particle.x, particle.y, particle.size, particle.color);
-      });
     };
 
     const collision = (b, p) => {
@@ -87,18 +75,15 @@ const PongGame = () => {
         }
 
         // Determine which paddle is being hit
-        let player = (ball.x < canvas.width / 2) ? paddle.player : paddle.computer;
+        let player = ball.x < canvas.width / 2 ? paddle.player : paddle.computer;
 
         // Check for paddle collision
-        if (collision(ball, {
-          x: (ball.x < canvas.width / 2) ? 0 : canvas.width - paddle.width,
-          y: player.y,
-        })) {
+        if (collision(ball, { x: ball.x < canvas.width / 2 ? 0 : canvas.width - paddle.width, y: player.y })) {
           let collidePoint = ball.y - (player.y + paddle.height / 2);
           collidePoint = collidePoint / (paddle.height / 2);
           
           let angleRad = (Math.PI / 4) * collidePoint;
-          let direction = (ball.x < canvas.width / 2) ? 1 : -1;
+          let direction = ball.x < canvas.width / 2 ? 1 : -1;
           
           ball.velocityX = direction * ball.speed * Math.cos(angleRad);
           ball.velocityY = ball.speed * Math.sin(angleRad);
@@ -106,8 +91,7 @@ const PongGame = () => {
           ball.speed += 0.1;
 
           // Create particles on collision
-          const newParticles = createParticles(ball.x, ball.y, '#fff', 20);
-          setParticles(prevParticles => [...prevParticles, ...newParticles]);
+          particles = particles.concat(createParticles(ball.x, ball.y, '#fff', 10));
         }
 
         // Move computer paddle
@@ -123,17 +107,37 @@ const PongGame = () => {
         }
 
         // Update particles
-        setParticles(prevParticles => 
-          prevParticles
-            .map(particle => ({
-              ...particle,
-              x: particle.x + particle.speedX,
-              y: particle.y + particle.speedY,
-              life: particle.life - 1
-            }))
-            .filter(particle => particle.life > 0)
-        );
+        particles = particles.filter(particle => particle.life > 0).map(particle => ({
+          ...particle,
+          x: particle.x + particle.speedX,
+          y: particle.y + particle.speedY,
+          life: particle.life - 1
+        }));
       }
+    };
+
+    const render = () => {
+      // Clear the canvas
+      context.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw background
+      drawRect(0, 0, canvas.width, canvas.height, '#000');
+
+      // Draw paddles
+      drawRect(0, paddle.player.y, paddle.width, paddle.height, '#fff');
+      drawRect(canvas.width - paddle.width, paddle.computer.y, paddle.width, paddle.height, '#fff');
+
+      // Draw ball
+      drawCircle(ball.x, ball.y, ball.radius, '#fff');
+
+      // Draw particles
+      particles.forEach(particle => {
+        drawCircle(particle.x, particle.y, particle.size, particle.color);
+      });
+
+      // Draw score
+      drawText(score.player, canvas.width / 4, canvas.height / 5, '#fff');
+      drawText(score.computer, 3 * canvas.width / 4, canvas.height / 5, '#fff');
     };
 
     const gameLoop = () => {
@@ -149,13 +153,17 @@ const PongGame = () => {
 
     canvas.addEventListener('mousemove', handleMouseMove);
 
-    gameLoop();
+    if (gameStarted) {
+      gameLoop();
+    } else {
+      render(); // Render initial state
+    }
 
     return () => {
       cancelAnimationFrame(animationFrameId);
       canvas.removeEventListener('mousemove', handleMouseMove);
     };
-  }, [gameStarted, score, particles]);
+  }, [gameStarted, score]);
 
   return (
     <div className="flex flex-col items-center">
