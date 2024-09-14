@@ -5,6 +5,7 @@ const PongGame = () => {
   const canvasRef = useRef(null);
   const [gameStarted, setGameStarted] = useState(false);
   const [score, setScore] = useState({ player: 0, computer: 0 });
+  const [isDelayed, setIsDelayed] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -66,7 +67,7 @@ const PongGame = () => {
     };
 
     const update = () => {
-      if (gameStarted) {
+      if (gameStarted && !isDelayed) {
         ball.x += ball.velocityX;
         ball.y += ball.velocityY;
 
@@ -99,14 +100,18 @@ const PongGame = () => {
         paddle.computer.y += (ball.y - (paddle.computer.y + paddle.height / 2)) * 0.1;
 
         // Update score and create explosion
-        if (ball.x - ball.radius < 0) {
-          setScore(prevScore => ({ ...prevScore, computer: prevScore.computer + 1 }));
+        if (ball.x - ball.radius < 0 || ball.x + ball.radius > canvas.width) {
+          if (ball.x - ball.radius < 0) {
+            setScore(prevScore => ({ ...prevScore, computer: prevScore.computer + 1 }));
+          } else {
+            setScore(prevScore => ({ ...prevScore, player: prevScore.player + 1 }));
+          }
           explosionParticles = createExplosion(ball.x, ball.y);
-          resetBall();
-        } else if (ball.x + ball.radius > canvas.width) {
-          setScore(prevScore => ({ ...prevScore, player: prevScore.player + 1 }));
-          explosionParticles = createExplosion(ball.x, ball.y);
-          resetBall();
+          setIsDelayed(true);
+          setTimeout(() => {
+            setIsDelayed(false);
+            resetBall();
+          }, 3000);
         }
 
         // Update particles
@@ -154,6 +159,13 @@ const PongGame = () => {
       // Draw score
       drawText(score.player, canvas.width / 4, canvas.height / 5, '#fff');
       drawText(score.computer, 3 * canvas.width / 4, canvas.height / 5, '#fff');
+
+      // Draw delay message
+      if (isDelayed) {
+        context.fillStyle = 'rgba(255, 255, 255, 0.5)';
+        context.font = '30px Arial';
+        context.fillText('Resuming in 3 seconds...', canvas.width / 2 - 150, canvas.height / 2);
+      }
     };
 
     const gameLoop = () => {
@@ -179,7 +191,7 @@ const PongGame = () => {
       cancelAnimationFrame(animationFrameId);
       canvas.removeEventListener('mousemove', handleMouseMove);
     };
-  }, [gameStarted, score]);
+  }, [gameStarted, score, isDelayed]);
 
   return (
     <div className="flex flex-col items-center">
