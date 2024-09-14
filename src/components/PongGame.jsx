@@ -11,6 +11,7 @@ const PongGame = () => {
     const context = canvas.getContext('2d');
     let animationFrameId;
 
+    // Dynamic canvas sizing
     canvas.width = window.innerWidth * 0.8;
     canvas.height = window.innerHeight * 0.6;
 
@@ -19,13 +20,13 @@ const PongGame = () => {
       height: 100,
       player: { y: canvas.height / 2 - 50 },
       computer: { y: canvas.height / 2 - 50 },
-      speed: 7, // For player keyboard control
+      speed: 7,  // For player keyboard control
     };
 
     const ball = {
       x: canvas.width / 2,
       y: canvas.height / 2,
-      radius: 10, // Slightly larger for effect
+      radius: 5,
       speed: 7,
       velocityX: 5,
       velocityY: 5,
@@ -39,8 +40,7 @@ const PongGame = () => {
       context.fillRect(x, y, w, h);
     };
 
-    const drawBall = (x, y, r, color) => {
-      // Simpler ball drawing without gradients or shadow effects
+    const drawCircle = (x, y, r, color) => {
       context.fillStyle = color;
       context.beginPath();
       context.arc(x, y, r, 0, Math.PI * 2, false);
@@ -101,7 +101,7 @@ const PongGame = () => {
       }
 
       // Move computer paddle with difficulty adjustments
-      let computerSpeed = 0.07 + Math.random() * 0.03; // Some randomness
+      let computerSpeed = 0.07 + Math.random() * 0.03;  // Some randomness
       paddle.computer.y += (ball.y - (paddle.computer.y + paddle.height / 2)) * computerSpeed;
 
       // Update score and create explosion
@@ -143,8 +143,8 @@ const PongGame = () => {
       drawRect(0, paddle.player.y, paddle.width, paddle.height, '#fff');
       drawRect(canvas.width - paddle.width, paddle.computer.y, paddle.width, paddle.height, '#fff');
 
-      // Draw ball without gradient or glow effect
-      drawBall(ball.x, ball.y, ball.radius, '#00FFFF'); // Simpler ball with electric cyan color
+      // Draw ball
+      drawCircle(ball.x, ball.y, ball.radius, '#fff');
 
       // Draw particles
       particles.forEach(particle => {
