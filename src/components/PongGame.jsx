@@ -39,20 +39,13 @@ const PongGame = () => {
       context.fillRect(x, y, w, h);
     };
 
-    const drawBallWithGlow = (x, y, r, color) => {
-      // Create gradient for the glowing effect
-      const gradient = context.createRadialGradient(x, y, r * 0.3, x, y, r);
-      gradient.addColorStop(0, '#fff');
-      gradient.addColorStop(1, color);
-
-      context.shadowBlur = 15;
-      context.shadowColor = color;
-      context.fillStyle = gradient;
+    const drawBall = (x, y, r, color) => {
+      // Simpler ball drawing without gradients or shadow effects
+      context.fillStyle = color;
       context.beginPath();
       context.arc(x, y, r, 0, Math.PI * 2, false);
       context.closePath();
       context.fill();
-      context.shadowBlur = 0; // Reset shadowBlur after drawing
     };
 
     const drawText = (text, x, y, color) => {
@@ -150,8 +143,8 @@ const PongGame = () => {
       drawRect(0, paddle.player.y, paddle.width, paddle.height, '#fff');
       drawRect(canvas.width - paddle.width, paddle.computer.y, paddle.width, paddle.height, '#fff');
 
-      // Draw ball with glow effect
-      drawBallWithGlow(ball.x, ball.y, ball.radius, '#00FFFF'); // Cool glow with electric cyan color
+      // Draw ball without gradient or glow effect
+      drawBall(ball.x, ball.y, ball.radius, '#00FFFF'); // Simpler ball with electric cyan color
 
       // Draw particles
       particles.forEach(particle => {
