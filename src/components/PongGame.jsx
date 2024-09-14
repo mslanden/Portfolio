@@ -111,12 +111,12 @@ const PongGame = () => {
         setScore(prevScore => ({ ...prevScore, computer: prevScore.computer + 1 }));
         explosionParticles = createExplosion(ball.x, ball.y);
         setBallResetting(true); // Start ball resetting process
-        setTimeout(resetBall, 1000); // Delay the reset by 1 second
+        setTimeout(resetBall, 5000); // Delay the reset by 5 second
       } else if (ball.x + ball.radius > canvas.width) {
         setScore(prevScore => ({ ...prevScore, player: prevScore.player + 1 }));
         explosionParticles = createExplosion(ball.x, ball.y);
         setBallResetting(true); // Start ball resetting process
-        setTimeout(resetBall, 1000); // Delay the reset by 1 second
+        setTimeout(resetBall, 5000); // Delay the reset by 5 second
       }
 
       // Update particles
