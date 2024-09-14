@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Particle, createParticles } from '../utils/particleUtils';
+import { createParticles } from '../utils/particleUtils';
 
 const PongGame = () => {
   const canvasRef = useRef(null);
@@ -55,9 +55,8 @@ const PongGame = () => {
       drawText(score.player, canvas.width / 4, canvas.height / 5, '#fff');
       drawText(score.computer, 3 * canvas.width / 4, canvas.height / 5, '#fff');
 
-      // Draw particles
       particles.forEach(particle => {
-        particle.draw(context);
+        drawCircle(particle.x, particle.y, particle.size, particle.color);
       });
     };
 
@@ -91,12 +90,10 @@ const PongGame = () => {
         let player = (ball.x < canvas.width / 2) ? paddle.player : paddle.computer;
 
         // Check for paddle collision
-        if (
-          collision(ball, {
-            x: (ball.x < canvas.width / 2) ? 0 : canvas.width - paddle.width,
-            y: player.y,
-          })
-        ) {
+        if (collision(ball, {
+          x: (ball.x < canvas.width / 2) ? 0 : canvas.width - paddle.width,
+          y: player.y,
+        })) {
           let collidePoint = ball.y - (player.y + paddle.height / 2);
           collidePoint = collidePoint / (paddle.height / 2);
           
@@ -128,10 +125,12 @@ const PongGame = () => {
         // Update particles
         setParticles(prevParticles => 
           prevParticles
-            .map(particle => {
-              particle.update();
-              return particle;
-            })
+            .map(particle => ({
+              ...particle,
+              x: particle.x + particle.speedX,
+              y: particle.y + particle.speedY,
+              life: particle.life - 1
+            }))
             .filter(particle => particle.life > 0)
         );
       }
