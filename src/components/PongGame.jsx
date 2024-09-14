@@ -6,7 +6,8 @@ const PongGame = () => {
   const [gameStarted, setGameStarted] = useState(false);
   const [score, setScore] = useState({ player: 0, computer: 0 });
   const [ballResetting, setBallResetting] = useState(false); // Track if ball is resetting
-  const [explosions, setExplosions] = useState([]); // Track active explosions
+
+  const explosions = useRef([]); // Use ref for explosions to avoid re-rendering issues
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -74,7 +75,7 @@ const PongGame = () => {
 
     const updateExplosions = () => {
       // Update existing explosions by filtering out those with expired particles
-      setExplosions(prevExplosions => prevExplosions.filter(explosion => {
+      explosions.current = explosions.current.filter(explosion => {
         return explosion.particles.some(particle => particle.life > 0);
       }).map(explosion => ({
         ...explosion,
@@ -84,7 +85,7 @@ const PongGame = () => {
           y: particle.y + particle.speedY,
           life: particle.life - 1
         }))
-      })));
+      }));
     };
 
     const update = () => {
@@ -124,12 +125,12 @@ const PongGame = () => {
       // Update score and create explosion
       if (ball.x - ball.radius < 0) {
         setScore(prevScore => ({ ...prevScore, computer: prevScore.computer + 1 }));
-        setExplosions(prev => [...prev, { particles: createExplosion(ball.x, ball.y) }]); // Store explosion
+        explosions.current.push({ particles: createExplosion(ball.x, ball.y) }); // Store explosion in ref
         setBallResetting(true); // Start ball resetting process
         setTimeout(resetBall, 1000); // Delay the reset by 1 second
       } else if (ball.x + ball.radius > canvas.width) {
         setScore(prevScore => ({ ...prevScore, player: prevScore.player + 1 }));
-        setExplosions(prev => [...prev, { particles: createExplosion(ball.x, ball.y) }]); // Store explosion
+        explosions.current.push({ particles: createExplosion(ball.x, ball.y) }); // Store explosion in ref
         setBallResetting(true); // Start ball resetting process
         setTimeout(resetBall, 1000); // Delay the reset by 1 second
       }
@@ -167,7 +168,7 @@ const PongGame = () => {
       });
 
       // Draw explosion particles
-      explosions.forEach(explosion => {
+      explosions.current.forEach(explosion => {
         explosion.particles.forEach(particle => {
           drawCircle(particle.x, particle.y, particle.size, particle.color);
         });
@@ -212,7 +213,7 @@ const PongGame = () => {
       canvas.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [gameStarted, score, ballResetting, explosions]);
+  }, [gameStarted, score, ballResetting]);
 
   return (
     <div className="flex flex-col items-center">
