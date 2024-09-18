@@ -49,7 +49,7 @@ const AboutSection = () => (
     <div className="container mx-auto px-4">
       <h2 className="text-3xl font-bold mb-8 text-center text-teal-700">About Me</h2>
       <div className="flex flex-col md:flex-row items-center justify-center">
-        <img src="/marcelino-landen.jpg" alt="Marcelino Landen" className="w-64 h-64 rounded-full mb-8 md:mb-0 md:mr-8 border-4 border-orange-500 shadow-lg mx-auto object-cover" />
+        <img src="/marcelino-landen.JPG" alt="Marcelino Landen" className="w-64 h-64 rounded-full mb-8 md:mb-0 md:mr-8 border-4 border-orange-500 shadow-lg mx-auto object-cover" />
         <div className="max-w-md">
           <p className="text-teal-800 mb-4">
             Hello! I'm Marcelino Landen, a web developer with a passion for creating beautiful and functional websites. 
