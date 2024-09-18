@@ -30,31 +30,31 @@ const minimax = (board, depth, isWhiteTurn, alpha, beta) => {
   }
 
   if (isWhiteTurn) {
-    let maxEval = -Infinity;
+    let maxEvaluation = -Infinity;
     const possibleMoves = getAllMoves(board, true);
     for (const move of possibleMoves) {
       const newBoard = makeMove(board, move);
-      const eval = minimax(newBoard, depth - 1, false, alpha, beta);
-      maxEval = Math.max(maxEval, eval);
-      alpha = Math.max(alpha, eval);
+      const evaluation = minimax(newBoard, depth - 1, false, alpha, beta);
+      maxEvaluation = Math.max(maxEvaluation, evaluation);
+      alpha = Math.max(alpha, evaluation);
       if (beta <= alpha) {
         break;
       }
     }
-    return maxEval;
+    return maxEvaluation;
   } else {
-    let minEval = Infinity;
+    let minEvaluation = Infinity;
     const possibleMoves = getAllMoves(board, false);
     for (const move of possibleMoves) {
       const newBoard = makeMove(board, move);
-      const eval = minimax(newBoard, depth - 1, true, alpha, beta);
-      minEval = Math.min(minEval, eval);
-      beta = Math.min(beta, eval);
+      const evaluation = minimax(newBoard, depth - 1, true, alpha, beta);
+      minEvaluation = Math.min(minEvaluation, evaluation);
+      beta = Math.min(beta, evaluation);
       if (beta <= alpha) {
         break;
       }
     }
-    return minEval;
+    return minEvaluation;
   }
 };
 
@@ -95,15 +95,15 @@ const isGameOver = (board, isWhiteTurn) => {
 // Get the best move using Minimax
 const getBestMove = (board, isWhiteTurn, depth = 3) => {
   let bestMove = null;
-  let bestEval = isWhiteTurn ? -Infinity : Infinity;
+  let bestEvaluation = isWhiteTurn ? -Infinity : Infinity;
 
   const possibleMoves = getAllMoves(board, isWhiteTurn);
   for (const move of possibleMoves) {
     const newBoard = makeMove(board, move);
-    const eval = minimax(newBoard, depth - 1, !isWhiteTurn, -Infinity, Infinity);
+    const evaluation = minimax(newBoard, depth - 1, !isWhiteTurn, -Infinity, Infinity);
 
-    if (isWhiteTurn ? eval > bestEval : eval < bestEval) {
-      bestEval = eval;
+    if (isWhiteTurn ? evaluation > bestEvaluation : evaluation < bestEvaluation) {
+      bestEvaluation = evaluation;
       bestMove = move;
     }
   }
