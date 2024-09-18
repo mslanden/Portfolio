@@ -9,34 +9,35 @@ const PongGame = () => {
   const canvasRef = useRef(null);
   const [gameStarted, setGameStarted] = useState(false);
   const [score, setScore] = useState({ player: 0, computer: 0 });
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const context = canvas.getContext('2d');
-    let animationFrameId;
-
-    const paddle = {
+  const gameStateRef = useRef({
+    paddle: {
       width: 10,
       height: 100,
       player: { y: CANVAS_HEIGHT / 2 - 50 },
       computer: { y: CANVAS_HEIGHT / 2 - 50 },
       speed: 7,
-    };
-
-    const ball = {
+    },
+    ball: {
       x: CANVAS_WIDTH / 2,
       y: CANVAS_HEIGHT / 2,
       radius: 5,
       speed: 7,
       velocityX: 5,
       velocityY: 5,
-    };
+    },
+    particles: [],
+    explosions: [],
+  });
 
-    let particles = [];
-    let explosions = [];
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const context = canvas.getContext('2d');
+    let animationFrameId;
 
     const update = () => {
       if (!gameStarted) return;
+
+      const { ball, paddle, particles, explosions } = gameStateRef.current;
 
       ball.x += ball.velocityX;
       ball.y += ball.velocityY;
@@ -62,7 +63,7 @@ const PongGame = () => {
         ball.speed += 0.1;
 
         // Create particles on collision
-        particles = particles.concat(createParticles(ball.x, ball.y, 20));
+        gameStateRef.current.particles = particles.concat(createParticles(ball.x, ball.y, 20));
       }
 
       // Move computer paddle
@@ -71,23 +72,25 @@ const PongGame = () => {
       // Update score and create explosion
       if (ball.x - ball.radius < 0) {
         setScore(prevScore => ({ ...prevScore, computer: prevScore.computer + 1 }));
-        explosions.push(createExplosion(ball.x, ball.y));
+        gameStateRef.current.explosions.push(createExplosion(ball.x, ball.y));
         resetBall();
       } else if (ball.x + ball.radius > CANVAS_WIDTH) {
         setScore(prevScore => ({ ...prevScore, player: prevScore.player + 1 }));
-        explosions.push(createExplosion(ball.x, ball.y));
+        gameStateRef.current.explosions.push(createExplosion(ball.x, ball.y));
         resetBall();
       }
 
       // Update particles and explosions
-      particles = particles.filter(particle => particle.life > 0).map(updateParticle);
-      explosions = explosions.filter(explosion => explosion.some(particle => particle.life > 0)).map(updateExplosion);
+      gameStateRef.current.particles = particles.filter(particle => particle.life > 0).map(updateParticle);
+      gameStateRef.current.explosions = explosions.filter(explosion => explosion.some(particle => particle.life > 0)).map(updateExplosion);
     };
 
     const render = () => {
       context.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
       context.fillStyle = '#000';
       context.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+      const { ball, paddle, particles, explosions } = gameStateRef.current;
 
       drawRect(0, paddle.player.y, paddle.width, paddle.height, '#fff');
       drawRect(CANVAS_WIDTH - paddle.width, paddle.computer.y, paddle.width, paddle.height, '#fff');
@@ -109,8 +112,8 @@ const PongGame = () => {
     const handleMouseMove = (e) => {
       const rect = canvas.getBoundingClientRect();
       const scale = CANVAS_HEIGHT / rect.height;
-      paddle.player.y = (e.clientY - rect.top) * scale - paddle.height / 2;
-      paddle.player.y = Math.max(0, Math.min(CANVAS_HEIGHT - paddle.height, paddle.player.y));
+      gameStateRef.current.paddle.player.y = (e.clientY - rect.top) * scale - gameStateRef.current.paddle.height / 2;
+      gameStateRef.current.paddle.player.y = Math.max(0, Math.min(CANVAS_HEIGHT - gameStateRef.current.paddle.height, gameStateRef.current.paddle.player.y));
     };
 
     canvas.addEventListener('mousemove', handleMouseMove);
@@ -128,6 +131,7 @@ const PongGame = () => {
   }, [gameStarted, score]);
 
   const resetBall = () => {
+    const { ball } = gameStateRef.current;
     ball.x = CANVAS_WIDTH / 2;
     ball.y = CANVAS_HEIGHT / 2;
     ball.velocityX = -ball.velocityX;
@@ -179,7 +183,7 @@ const PongGame = () => {
         width={CANVAS_WIDTH}
         height={CANVAS_HEIGHT}
         className="border border-gray-300"
-        style={{ width: '100%', maxWidth: `${CANVAS_WIDTH}px`, height: 'auto' }}
+        style={{ width: '100%', maxWidth: `${CANVAS_WIDTH}px`, height: 'auto', aspectRatio: `${CANVAS_WIDTH} / ${CANVAS_HEIGHT}` }}
       />
       <Button
         className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
