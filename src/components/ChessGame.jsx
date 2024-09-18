@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { isValidMove, isInCheck, getRandomMove, pawnPromotion } from '../utils/chessUtils';
+import { isValidMove, isInCheck, getBestMove, pawnPromotion } from '../utils/chessUtils';
 
 const ChessGame = () => {
   const initialBoard = [
@@ -69,7 +69,7 @@ const ChessGame = () => {
   };
 
   const makeAIMove = () => {
-    const move = getRandomMove(board, false);
+    const move = getBestMove(board, false);
     if (move) {
       const { startRow, startCol, endRow, endCol } = move;
       const newBoard = board.map(row => [...row]);
@@ -87,7 +87,7 @@ const ChessGame = () => {
 
   const checkGameState = (newBoard, isWhiteTurn) => {
     if (isInCheck(newBoard, isWhiteTurn)) {
-      const hasValidMove = getRandomMove(newBoard, isWhiteTurn) !== null;
+      const hasValidMove = getBestMove(newBoard, isWhiteTurn) !== null;
       if (!hasValidMove) {
         setIsGameOver(true);
         setMessage(`Checkmate! ${isWhiteTurn ? 'Black' : 'White'} wins!`);
@@ -95,7 +95,7 @@ const ChessGame = () => {
         setMessage(`${isWhiteTurn ? 'White' : 'Black'} is in check!`);
       }
     } else {
-      const hasValidMove = getRandomMove(newBoard, isWhiteTurn) !== null;
+      const hasValidMove = getBestMove(newBoard, isWhiteTurn) !== null;
       if (!hasValidMove) {
         setIsGameOver(true);
         setMessage("Game over: Stalemate");
@@ -105,8 +105,7 @@ const ChessGame = () => {
 
   const handlePromotion = (piece) => {
     if (promotionPawn) {
-      const newBoard = board.map(row => [...row]);
-      newBoard[promotionPawn.row][promotionPawn.col] = piece;
+      const newBoard = pawnPromotion(board, promotionPawn.row, promotionPawn.col, piece);
       setBoard(newBoard);
       setPromotionPawn(null);
       finishTurn(newBoard);
