@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { isValidMove, isOpponentPiece, isInCheck, getRandomMove } from '../utils/chessUtils';
+import { isValidMove, isInCheck, getRandomMove, pawnPromotion } from '../utils/chessUtils';
 
 const ChessGame = () => {
   const initialBoard = [
@@ -19,6 +19,7 @@ const ChessGame = () => {
   const [isWhiteTurn, setIsWhiteTurn] = useState(true);
   const [message, setMessage] = useState('Your turn (White)');
   const [isGameOver, setIsGameOver] = useState(false);
+  const [promotionPawn, setPromotionPawn] = useState(null);
 
   useEffect(() => {
     if (!isWhiteTurn && !isGameOver) {
@@ -39,11 +40,13 @@ const ChessGame = () => {
           newBoard[row][col] = piece;
           newBoard[selectedPiece.row][selectedPiece.col] = '';
 
-          if (!isInCheck(newBoard, false)) {
+          if (!isInCheck(newBoard, true)) {
             setBoard(newBoard);
-            setIsWhiteTurn(false);
-            setMessage("AI's turn (Black)");
-            checkGameState(newBoard, false);
+            if (piece === '♙' && row === 0) {
+              setPromotionPawn({ row, col });
+            } else {
+              finishTurn(newBoard);
+            }
           } else {
             setMessage("Invalid move: King would be in check");
           }
@@ -57,6 +60,12 @@ const ChessGame = () => {
     } else if (board[row][col] && board[row][col].charCodeAt(0) >= 9812 && board[row][col].charCodeAt(0) <= 9817) {
       setSelectedPiece({ row, col });
     }
+  };
+
+  const finishTurn = (newBoard) => {
+    setIsWhiteTurn(false);
+    setMessage("AI's turn (Black)");
+    checkGameState(newBoard, false);
   };
 
   const makeAIMove = () => {
@@ -94,12 +103,23 @@ const ChessGame = () => {
     }
   };
 
+  const handlePromotion = (piece) => {
+    if (promotionPawn) {
+      const newBoard = board.map(row => [...row]);
+      newBoard[promotionPawn.row][promotionPawn.col] = piece;
+      setBoard(newBoard);
+      setPromotionPawn(null);
+      finishTurn(newBoard);
+    }
+  };
+
   const resetGame = () => {
     setBoard(initialBoard);
     setSelectedPiece(null);
     setIsWhiteTurn(true);
     setMessage('Your turn (White)');
     setIsGameOver(false);
+    setPromotionPawn(null);
   };
 
   return (
@@ -121,6 +141,16 @@ const ChessGame = () => {
       </div>
       <p className="mb-4">{message}</p>
       <Button onClick={resetGame}>Reset Game</Button>
+      {promotionPawn && (
+        <div className="mt-4">
+          <p>Choose promotion piece:</p>
+          <div className="flex space-x-2">
+            {['♕', '♖', '♗', '♘'].map((piece) => (
+              <Button key={piece} onClick={() => handlePromotion(piece)}>{piece}</Button>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

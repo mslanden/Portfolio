@@ -2,7 +2,6 @@ const isValidMove = (piece, startRow, startCol, endRow, endCol, board) => {
   const rowDiff = Math.abs(endRow - startRow);
   const colDiff = Math.abs(endCol - startCol);
 
-  // Check if the target square contains a friendly piece
   if (board[endRow][endCol] && !isOpponentPiece(piece, board[endRow][endCol])) {
     return false;
   }
@@ -10,7 +9,6 @@ const isValidMove = (piece, startRow, startCol, endRow, endCol, board) => {
   switch (piece.toLowerCase()) {
     case '♟':
     case '♙':
-      // Pawn movement
       const direction = piece === '♟' ? 1 : -1;
       if (startCol === endCol) {
         if (rowDiff === 1 && startRow + direction === endRow && !board[endRow][endCol]) return true;
@@ -23,24 +21,19 @@ const isValidMove = (piece, startRow, startCol, endRow, endCol, board) => {
       return false;
     case '♜':
     case '♖':
-      // Rook movement
       return (startRow === endRow || startCol === endCol) && !isPathBlocked(startRow, startCol, endRow, endCol, board);
     case '♞':
     case '♘':
-      // Knight movement
       return (rowDiff === 2 && colDiff === 1) || (rowDiff === 1 && colDiff === 2);
     case '♝':
     case '♗':
-      // Bishop movement
       return rowDiff === colDiff && !isPathBlocked(startRow, startCol, endRow, endCol, board);
     case '♛':
     case '♕':
-      // Queen movement
       return ((startRow === endRow || startCol === endCol) || (rowDiff === colDiff)) && 
              !isPathBlocked(startRow, startCol, endRow, endCol, board);
     case '♚':
     case '♔':
-      // King movement
       return rowDiff <= 1 && colDiff <= 1;
     default:
       return false;
@@ -74,7 +67,6 @@ const isInCheck = (board, isWhiteTurn) => {
   const king = isWhiteTurn ? '♔' : '♚';
   let kingRow, kingCol;
 
-  // Find the king's position
   for (let row = 0; row < 8; row++) {
     for (let col = 0; col < 8; col++) {
       if (board[row][col] === king) {
@@ -86,7 +78,6 @@ const isInCheck = (board, isWhiteTurn) => {
     if (kingRow !== undefined) break;
   }
 
-  // Check if any opponent piece can attack the king
   for (let row = 0; row < 8; row++) {
     for (let col = 0; col < 8; col++) {
       const piece = board[row][col];
@@ -133,7 +124,13 @@ const getRandomMove = (board, isWhiteTurn) => {
     pieces.splice(randomIndex, 1);
   }
 
-  return null; // No valid moves found
+  return null;
 };
 
-export { isValidMove, isOpponentPiece, isInCheck, getRandomMove };
+const pawnPromotion = (board, row, col, newPiece) => {
+  const newBoard = board.map(row => [...row]);
+  newBoard[row][col] = newPiece;
+  return newBoard;
+};
+
+export { isValidMove, isOpponentPiece, isInCheck, getRandomMove, pawnPromotion };
