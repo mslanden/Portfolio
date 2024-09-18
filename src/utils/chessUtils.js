@@ -1,4 +1,10 @@
+const isValidPosition = (row, col) => row >= 0 && row < 8 && col >= 0 && col < 8;
+
 const isValidMove = (piece, startRow, startCol, endRow, endCol, board) => {
+  if (!isValidPosition(endRow, endCol) || !board[endRow] || board[endRow][endCol] === undefined) {
+    return false;
+  }
+
   const rowDiff = Math.abs(endRow - startRow);
   const colDiff = Math.abs(endCol - startCol);
 
@@ -9,16 +15,7 @@ const isValidMove = (piece, startRow, startCol, endRow, endCol, board) => {
   switch (piece.toLowerCase()) {
     case '♟':
     case '♙':
-      const direction = piece === '♟' ? 1 : -1;
-      if (startCol === endCol) {
-        if (rowDiff === 1 && startRow + direction === endRow && !board[endRow][endCol]) return true;
-        if (rowDiff === 2 && startRow + 2 * direction === endRow && !board[endRow][endCol] && !board[startRow + direction][startCol] && 
-            ((piece === '♟' && startRow === 1) || (piece === '♙' && startRow === 6))) return true;
-      } else if (rowDiff === 1 && colDiff === 1 && startRow + direction === endRow && board[endRow][endCol] && 
-                 isOpponentPiece(piece, board[endRow][endCol])) {
-        return true;
-      }
-      return false;
+      return isPawnMove(piece, startRow, startCol, endRow, endCol, rowDiff, colDiff, board);
     case '♜':
     case '♖':
       return (startRow === endRow || startCol === endCol) && !isPathBlocked(startRow, startCol, endRow, endCol, board);
@@ -40,9 +37,22 @@ const isValidMove = (piece, startRow, startCol, endRow, endCol, board) => {
   }
 };
 
+const isPawnMove = (piece, startRow, startCol, endRow, endCol, rowDiff, colDiff, board) => {
+  const direction = piece === '♟' ? 1 : -1;
+  if (startCol === endCol) {
+    if (rowDiff === 1 && startRow + direction === endRow && !board[endRow][endCol]) return true;
+    if (rowDiff === 2 && startRow + 2 * direction === endRow && !board[endRow][endCol] && !board[startRow + direction][startCol] && 
+        ((piece === '♟' && startRow === 1) || (piece === '♙' && startRow === 6))) return true;
+  } else if (rowDiff === 1 && colDiff === 1 && startRow + direction === endRow && board[endRow][endCol] && 
+             isOpponentPiece(piece, board[endRow][endCol])) {
+    return true;
+  }
+  return false;
+};
+
 const isPathBlocked = (startRow, startCol, endRow, endCol, board) => {
-  const rowStep = startRow < endRow ? 1 : startRow > endRow ? -1 : 0;
-  const colStep = startCol < endCol ? 1 : startCol > endCol ? -1 : 0;
+  const rowStep = Math.sign(endRow - startRow);
+  const colStep = Math.sign(endCol - startCol);
 
   let currentRow = startRow + rowStep;
   let currentCol = startCol + colStep;
@@ -65,31 +75,27 @@ const isOpponentPiece = (piece1, piece2) => {
 
 const isInCheck = (board, isWhiteTurn) => {
   const king = isWhiteTurn ? '♔' : '♚';
-  let kingRow, kingCol;
+  const kingPosition = findKingPosition(board, king);
 
+  if (!kingPosition) return false;
+
+  return board.some((row, rowIndex) =>
+    row.some((piece, colIndex) =>
+      piece && isOpponentPiece(king, piece) &&
+      isValidMove(piece, rowIndex, colIndex, kingPosition.row, kingPosition.col, board)
+    )
+  );
+};
+
+const findKingPosition = (board, king) => {
   for (let row = 0; row < 8; row++) {
     for (let col = 0; col < 8; col++) {
       if (board[row][col] === king) {
-        kingRow = row;
-        kingCol = col;
-        break;
-      }
-    }
-    if (kingRow !== undefined) break;
-  }
-
-  for (let row = 0; row < 8; row++) {
-    for (let col = 0; col < 8; col++) {
-      const piece = board[row][col];
-      if (piece && isOpponentPiece(king, piece)) {
-        if (isValidMove(piece, row, col, kingRow, kingCol, board)) {
-          return true;
-        }
+        return { row, col };
       }
     }
   }
-
-  return false;
+  return null;
 };
 
 const getRandomMove = (board, isWhiteTurn) => {
@@ -104,10 +110,7 @@ const getRandomMove = (board, isWhiteTurn) => {
     }
   }
 
-  while (pieces.length > 0) {
-    const randomIndex = Math.floor(Math.random() * pieces.length);
-    const { piece, row, col } = pieces[randomIndex];
-
+  for (const { piece, row, col } of pieces) {
     for (let endRow = 0; endRow < 8; endRow++) {
       for (let endCol = 0; endCol < 8; endCol++) {
         if (isValidMove(piece, row, col, endRow, endCol, board)) {
@@ -120,8 +123,6 @@ const getRandomMove = (board, isWhiteTurn) => {
         }
       }
     }
-
-    pieces.splice(randomIndex, 1);
   }
 
   return null;
