@@ -34,7 +34,7 @@ const ContactSection = () => (
               variant="outline" 
               size="icon" 
               className="bg-transparent border-[#c24d2c] text-[#c24d2c] hover:bg-[#c24d2c] hover:text-[#1a2639] transition-colors"
-              onClick={() => window.location.href = 'mailto:contact@example.com'}
+              onClick={() => window.location.href = 'mailto:landenmsjd@gmail.com'}
             >
               <MailIcon className="h-5 w-5" />
             </Button>
