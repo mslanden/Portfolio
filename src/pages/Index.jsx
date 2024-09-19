@@ -38,8 +38,7 @@ const AIDevelopmentSection = () => (
   <section id="ai-development" className="min-h-screen flex items-center justify-center snap-start bg-black p-8">
     <div className="relative w-full max-w-4xl">
       <img 
-        src="/ai-development.jpg" 
-        alt="AI Development" 
+        src="/ai-development.jpg"  
         className="w-full h-auto rounded-lg shadow-2xl"
       />
       <div className="absolute inset-0 flex items-center justify-center">
