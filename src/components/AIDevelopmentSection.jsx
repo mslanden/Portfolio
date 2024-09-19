@@ -28,7 +28,7 @@ const AIDevelopmentSection = () => (
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            Marcelino Landen's AI-Driven Innovations
+            Marcelino Landen AI-Driven Innovations
           </motion.h2>
           <motion.p 
             className="text-lg sm:text-xl text-[#d9dad7] text-center sm:text-left"
