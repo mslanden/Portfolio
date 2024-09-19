@@ -31,12 +31,7 @@ const ChessGame = () => {
 
   const handleCellClick = (row, col) => {
     if (isGameOver || !isWhiteTurn) return;
-
-    if (selectedPiece) {
-      movePiece(row, col);
-    } else {
-      selectPiece(row, col);
-    }
+    selectedPiece ? movePiece(row, col) : selectPiece(row, col);
   };
 
   const selectPiece = (row, col) => {
@@ -50,17 +45,13 @@ const ChessGame = () => {
   const movePiece = (row, col) => {
     const piece = board[selectedPiece.row][selectedPiece.col];
     if (isValidMove(piece, selectedPiece.row, selectedPiece.col, row, col, board)) {
-      const newBoard = board.map(row => [...row]);
+      const newBoard = board.map(r => [...r]);
       newBoard[row][col] = piece;
       newBoard[selectedPiece.row][selectedPiece.col] = '';
 
       if (!isInCheck(newBoard, true)) {
         setBoard(newBoard);
-        if (piece === '♙' && row === 0) {
-          setPromotionPawn({ row, col });
-        } else {
-          finishTurn(newBoard);
-        }
+        piece === '♙' && row === 0 ? setPromotionPawn({ row, col }) : finishTurn(newBoard);
       } else {
         setMessage("Invalid move: King would be in check");
       }
@@ -77,7 +68,7 @@ const ChessGame = () => {
     for (let i = 0; i < 8; i++) {
       for (let j = 0; j < 8; j++) {
         if (isValidMove(piece, row, col, i, j, board)) {
-          const newBoard = board.map(row => [...row]);
+          const newBoard = board.map(r => [...r]);
           newBoard[i][j] = piece;
           newBoard[row][col] = '';
           if (!isInCheck(newBoard, true)) {
@@ -99,7 +90,7 @@ const ChessGame = () => {
     const move = getBestMove(board, false);
     if (move) {
       const { startRow, startCol, endRow, endCol } = move;
-      const newBoard = board.map(row => [...row]);
+      const newBoard = board.map(r => [...r]);
       newBoard[endRow][endCol] = newBoard[startRow][startCol];
       newBoard[startRow][startCol] = '';
       setBoard(newBoard);
@@ -107,9 +98,7 @@ const ChessGame = () => {
       setMessage("Your turn (White)");
       checkGameState(newBoard, true);
     } else {
-      setIsGameOver(true);
-      setMessage("Game over: Stalemate");
-      setGameResult("Draw");
+      endGame("Game over: Stalemate", "Draw");
     }
   };
 
@@ -117,29 +106,22 @@ const ChessGame = () => {
     if (isInCheck(newBoard, isWhiteTurn)) {
       const hasValidMove = getBestMove(newBoard, isWhiteTurn) !== null;
       if (!hasValidMove) {
-        setIsGameOver(true);
-        if (isWhiteTurn) {
-          setMessage("Checkmate! Black wins!");
-          setGameResult("You lose");
-        } else {
-          setMessage("Checkmate! White wins!");
-          setGameResult("You win");
-        }
+        endGame(isWhiteTurn ? "Checkmate! Black wins!" : "Checkmate! White wins!", isWhiteTurn ? "You lose" : "You win");
       } else {
         setMessage(`${isWhiteTurn ? 'White' : 'Black'} is in check!`);
       }
     } else {
       const hasValidMove = getBestMove(newBoard, isWhiteTurn) !== null;
-      if (!hasValidMove) {
-        setIsGameOver(true);
-        setMessage("Game over: Stalemate");
-        setGameResult("Draw");
-      } else if (isDraw(newBoard)) {
-        setIsGameOver(true);
-        setMessage("Game over: Draw");
-        setGameResult("Draw");
+      if (!hasValidMove || isDraw(newBoard)) {
+        endGame("Game over: Draw", "Draw");
       }
     }
+  };
+
+  const endGame = (message, result) => {
+    setIsGameOver(true);
+    setMessage(message);
+    setGameResult(result);
   };
 
   const handlePromotion = (piece) => {
@@ -162,6 +144,11 @@ const ChessGame = () => {
     setGameResult(null);
   };
 
+  const getPieceColor = (piece) => {
+    const isWhitePiece = piece.charCodeAt(0) <= 9817;
+    return isWhitePiece ? 'text-[#00FFFF]' : 'text-[#FF1493]';
+  };
+
   return (
     <div className="flex flex-col items-center">
       <div className="grid grid-cols-8 gap-1 mb-4">
@@ -170,12 +157,12 @@ const ChessGame = () => {
             <div
               key={`${rowIndex}-${colIndex}`}
               className={`w-10 h-10 flex items-center justify-center text-2xl cursor-pointer
-                ${(rowIndex + colIndex) % 2 === 0 ? 'bg-[#3e4a61]' : 'bg-[#1a2639]'}
+                ${(rowIndex + colIndex) % 2 === 0 ? 'bg-[#1a2639]' : 'bg-[#3e4a61]'}
                 ${selectedPiece && selectedPiece.row === rowIndex && selectedPiece.col === colIndex ? 'bg-[#c24d2c]' : ''}
                 ${availableMoves.some(move => move.row === rowIndex && move.col === colIndex) ? 'bg-[#d9dad7] bg-opacity-30' : ''}`}
               onClick={() => handleCellClick(rowIndex, colIndex)}
             >
-              {cell}
+              <span className={getPieceColor(cell)}>{cell}</span>
             </div>
           ))
         )}
