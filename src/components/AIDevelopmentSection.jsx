@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 const AIDevelopmentSection = () => (
   <div className="h-full flex items-center justify-center p-8">
-    <Card className="w-full max-w-4xl bg-[#d9dad7] bg-opacity-30 border-2 border-[#c24d2c] shadow-lg">
+    <Card className="w-full max-w-4xl bg-[#d9dad7] bg-opacity-10 border-2 border-[#c24d2c] shadow-lg">
       <CardContent className="p-8">
         <motion.h2 
           className="text-5xl font-bold mb-6 text-center text-[#c24d2c]"
@@ -36,7 +36,7 @@ const AIDevelopmentSection = () => (
 
 const FuturisticBox = ({ title, description }) => (
   <motion.div 
-    className="bg-[#d9dad7] bg-opacity-30 p-4 rounded-lg border border-[#c24d2c] shadow-md"
+    className="bg-[#d9dad7] bg-opacity-10 p-4 rounded-lg border border-[#c24d2c] shadow-md"
     whileHover={{ scale: 1.05, boxShadow: "0px 0px 8px rgb(194, 77, 44)" }}
     initial={{ opacity: 0, scale: 0.9 }}
     animate={{ opacity: 1, scale: 1 }}
