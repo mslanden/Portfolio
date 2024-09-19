@@ -8,11 +8,7 @@ const ChessBoard = ({ board, selectedPiece, availableMoves, handleCellClick }) =
       : 'text-black drop-shadow-[0_1px_2px_rgba(255,255,255,0.8)]';
   };
 
-  const getAvailableMoveColor = (rowIndex, colIndex) => {
-    const index = (rowIndex + colIndex) % 3;
-    const colors = ['bg-[#FFA500]', 'bg-[#FF8C00]', 'bg-[#FF4500]'];
-    return colors[index];
-  };
+  const getAvailableMoveColor = () => 'bg-[#4CAF50]';
 
   return (
     <div className="w-full max-w-[min(80vw,500px)] aspect-square mx-auto">
@@ -24,7 +20,7 @@ const ChessBoard = ({ board, selectedPiece, availableMoves, handleCellClick }) =
               className={`aspect-square flex items-center justify-center text-lg sm:text-xl md:text-2xl cursor-pointer
                 ${(rowIndex + colIndex) % 2 === 0 ? 'bg-[#d9dad7]' : 'bg-[#8b9bb4]'}
                 ${selectedPiece && selectedPiece.row === rowIndex && selectedPiece.col === colIndex ? 'bg-[#c24d2c]' : ''}
-                ${availableMoves.some(move => move.row === rowIndex && move.col === colIndex) ? `${getAvailableMoveColor(rowIndex, colIndex)} bg-opacity-50` : ''}`}
+                ${availableMoves.some(move => move.row === rowIndex && move.col === colIndex) ? `${getAvailableMoveColor()} bg-opacity-50` : ''}`}
               onClick={() => handleCellClick(rowIndex, colIndex)}
             >
               <span 
