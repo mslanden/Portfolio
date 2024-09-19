@@ -49,7 +49,7 @@ const Index = () => {
         className="fixed inset-0 bg-cover bg-center bg-no-repeat z-0"
         style={{ backgroundImage: "url('/ai-development.jpg')" }}
       ></div>
-      <div className="fixed inset-0 bg-black bg-opacity-5 z-10"></div>
+      <div className="fixed inset-0 bg-black bg-opacity-50 z-10"></div>
       <MeteorEffect />
       <div className="relative z-20">
         <ProfileBubble scrollToSection={scrollToSection} />
