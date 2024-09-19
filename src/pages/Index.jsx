@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
+import { motion } from "framer-motion";
 import ProfileBubble from '../components/ProfileBubble';
 import AIDevelopmentSection from '../components/AIDevelopmentSection';
 import AboutSection from '../components/AboutSection';
@@ -42,6 +43,11 @@ const Index = () => {
     sectionRefs[sectionId].current.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const cardVariants = {
+    hidden: { opacity: 0, x: 100 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.5 } }
+  };
+
   return (
     <div className="min-h-screen relative">
       <div 
@@ -53,15 +59,20 @@ const Index = () => {
         <ProfileBubble scrollToSection={scrollToSection} />
         <main>
           {sections.map((section) => (
-            <Card 
+            <motion.div
               key={section.id}
               ref={sectionRefs[section.id]}
-              className="min-h-screen w-full bg-transparent text-white"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.3 }}
+              variants={cardVariants}
             >
-              <CardContent className="p-0 h-full">
-                {section.component}
-              </CardContent>
-            </Card>
+              <Card className="min-h-screen w-full bg-transparent text-white">
+                <CardContent className="p-0 h-full">
+                  {section.component}
+                </CardContent>
+              </Card>
+            </motion.div>
           ))}
         </main>
       </div>
