@@ -9,89 +9,83 @@ import PongGame from '../components/PongGame';
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-100 to-teal-100 animate-gradient-x p-8">
-      <div className="container mx-auto">
-        <div className="flex flex-col md:flex-row gap-8">
-          <aside className="md:w-1/4">
-            <ProfileSection />
-            <NavCards />
-          </aside>
-          <main className="md:w-3/4">
-            <AboutSection />
-            <ProjectsSection />
-            <ContactSection />
-          </main>
-        </div>
-      </div>
+    <div className="h-screen overflow-y-scroll snap-y snap-mandatory">
+      <header className="fixed top-0 left-0 w-full bg-white bg-opacity-80 z-50 p-4">
+        <nav>
+          <ul className="flex justify-center space-x-4">
+            {['About', 'Projects', 'Contact'].map((section) => (
+              <li key={section}>
+                <a href={`#${section.toLowerCase()}`} className="text-teal-600 hover:text-orange-500 transition-colors">
+                  {section}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </header>
+      <main>
+        <AboutSection />
+        <ProjectsSection />
+        <ContactSection />
+      </main>
       <Footer />
     </div>
   );
 };
 
-const ProfileSection = () => (
-  <Card className="mb-6">
-    <CardContent className="p-6">
-      <img src="/marcelino-landen.jpg" alt="Marcelino Landen" className="w-full h-auto rounded-full mb-4 border-4 border-orange-500 shadow-lg object-cover animate-float" />
-      <h1 className="text-2xl font-bold text-orange-600 text-center">Marcelino Landen</h1>
-      <p className="text-teal-600 text-center">Web Developer</p>
-    </CardContent>
-  </Card>
-);
-
-const NavCards = () => (
-  <div className="space-y-4">
-    {['About', 'Projects', 'Contact'].map((section) => (
-      <Card key={section} className="hover:shadow-lg transition-shadow">
-        <CardContent className="p-4">
-          <a href={`#${section.toLowerCase()}`} className="text-teal-600 hover:text-orange-500 transition-colors">
-            {section}
-          </a>
+const AboutSection = () => (
+  <section id="about" className="min-h-screen flex items-center justify-center snap-start bg-gradient-to-br from-orange-100 to-teal-100 p-8">
+    <div className="max-w-4xl">
+      <Card className="mb-8">
+        <CardHeader>
+          <CardTitle className="text-3xl font-bold text-teal-700">About Me</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col md:flex-row items-center gap-8">
+            <img src="/marcelino-landen.jpg" alt="Marcelino Landen" className="w-48 h-48 rounded-full mb-4 border-4 border-orange-500 shadow-lg object-cover animate-float" />
+            <div>
+              <h1 className="text-2xl font-bold text-orange-600 mb-2">Marcelino Landen</h1>
+              <p className="text-teal-600 mb-4">Web Developer</p>
+              <p className="text-teal-800 mb-4">
+                Hello! I'm Marcelino Landen, a web developer with a passion for creating beautiful and functional websites. 
+                I specialize in React, Node.js, and modern web technologies, bringing a splash of creativity to every project.
+              </p>
+              <p className="text-teal-800">
+                When I'm not coding, you can find me exploring new technologies, contributing to open-source projects, 
+                or experimenting with digital art to fuel my creative spirit.
+              </p>
+            </div>
+          </div>
         </CardContent>
       </Card>
-    ))}
-  </div>
-);
-
-const AboutSection = () => (
-  <Card id="about" className="mb-8">
-    <CardHeader>
-      <CardTitle className="text-3xl font-bold text-teal-700">About Me</CardTitle>
-    </CardHeader>
-    <CardContent>
-      <p className="text-teal-800 mb-4">
-        Hello! I'm Marcelino Landen, a web developer with a passion for creating beautiful and functional websites. 
-        I specialize in React, Node.js, and modern web technologies, bringing a splash of creativity to every project.
-      </p>
-      <p className="text-teal-800">
-        When I'm not coding, you can find me exploring new technologies, contributing to open-source projects, 
-        or experimenting with digital art to fuel my creative spirit.
-      </p>
-    </CardContent>
-  </Card>
+    </div>
+  </section>
 );
 
 const ProjectsSection = () => (
-  <Card id="projects" className="mb-8">
-    <CardHeader>
-      <CardTitle className="text-3xl font-bold text-teal-700">My Projects</CardTitle>
-    </CardHeader>
-    <CardContent>
-      <ScrollArea className="w-full whitespace-nowrap rounded-md border">
-        <div className="flex w-max space-x-4 p-4 snap-x snap-mandatory">
-          <ProjectCard title="Chess Game" description="A vibrant chess game built with React.">
-            <ChessGame />
-          </ProjectCard>
-          <ProjectCard title="Website Analyzer" description="Analyze websites and generate colorful insights.">
-            <WebsiteAnalyzer />
-          </ProjectCard>
-          <ProjectCard title="Pong Game" description="A classic Pong game with a splash of color.">
-            <PongGame />
-          </ProjectCard>
-        </div>
-        <ScrollBar orientation="horizontal" />
-      </ScrollArea>
-    </CardContent>
-  </Card>
+  <section id="projects" className="min-h-screen flex items-center justify-center snap-start bg-gradient-to-br from-teal-100 to-orange-100 p-8">
+    <Card className="w-full max-w-4xl">
+      <CardHeader>
+        <CardTitle className="text-3xl font-bold text-teal-700">My Projects</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <ScrollArea className="w-full whitespace-nowrap rounded-md border">
+          <div className="flex w-max space-x-4 p-4 snap-x snap-mandatory">
+            <ProjectCard title="Chess Game" description="A vibrant chess game built with React.">
+              <ChessGame />
+            </ProjectCard>
+            <ProjectCard title="Website Analyzer" description="Analyze websites and generate colorful insights.">
+              <WebsiteAnalyzer />
+            </ProjectCard>
+            <ProjectCard title="Pong Game" description="A classic Pong game with a splash of color.">
+              <PongGame />
+            </ProjectCard>
+          </div>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
+      </CardContent>
+    </Card>
+  </section>
 );
 
 const ProjectCard = ({ title, description, children }) => (
@@ -105,25 +99,27 @@ const ProjectCard = ({ title, description, children }) => (
 );
 
 const ContactSection = () => (
-  <Card id="contact" className="mb-8">
-    <CardHeader>
-      <CardTitle className="text-3xl font-bold text-teal-700">Get in Touch</CardTitle>
-    </CardHeader>
-    <CardContent>
-      <p className="text-xl mb-6 text-orange-700">I'm always open to new opportunities and collaborations.</p>
-      <div className="flex justify-center space-x-4">
-        <Button variant="outline" size="icon" className="bg-white border-teal-500 text-teal-500 hover:bg-teal-100 hover:scale-110 transition-transform">
-          <GithubIcon className="h-5 w-5" />
-        </Button>
-        <Button variant="outline" size="icon" className="bg-white border-orange-500 text-orange-500 hover:bg-orange-100 hover:scale-110 transition-transform">
-          <LinkedinIcon className="h-5 w-5" />
-        </Button>
-        <Button variant="outline" size="icon" className="bg-white border-teal-500 text-teal-500 hover:bg-teal-100 hover:scale-110 transition-transform">
-          <MailIcon className="h-5 w-5" />
-        </Button>
-      </div>
-    </CardContent>
-  </Card>
+  <section id="contact" className="min-h-screen flex items-center justify-center snap-start bg-gradient-to-br from-orange-100 to-teal-100 p-8">
+    <Card className="max-w-4xl">
+      <CardHeader>
+        <CardTitle className="text-3xl font-bold text-teal-700">Get in Touch</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-xl mb-6 text-orange-700">I'm always open to new opportunities and collaborations.</p>
+        <div className="flex justify-center space-x-4">
+          <Button variant="outline" size="icon" className="bg-white border-teal-500 text-teal-500 hover:bg-teal-100 hover:scale-110 transition-transform">
+            <GithubIcon className="h-5 w-5" />
+          </Button>
+          <Button variant="outline" size="icon" className="bg-white border-orange-500 text-orange-500 hover:bg-orange-100 hover:scale-110 transition-transform">
+            <LinkedinIcon className="h-5 w-5" />
+          </Button>
+          <Button variant="outline" size="icon" className="bg-white border-teal-500 text-teal-500 hover:bg-teal-100 hover:scale-110 transition-transform">
+            <MailIcon className="h-5 w-5" />
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  </section>
 );
 
 const Footer = () => (
