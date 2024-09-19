@@ -1,22 +1,21 @@
-import React, { forwardRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 
-const PongCanvas = forwardRef(({ gameState }, ref) => {
+const PongCanvas = ({ width, height, gameState, handleMouseMove }) => {
+  const canvasRef = useRef(null);
+
   useEffect(() => {
-    const canvas = ref.current;
-    if (!canvas) return;
-
+    const canvas = canvasRef.current;
     const context = canvas.getContext('2d');
     const render = () => {
-      if (!canvas) return;
       context.fillStyle = '#1a2639';
-      context.fillRect(0, 0, canvas.width, canvas.height);
+      context.fillRect(0, 0, width, height);
 
       const { ball, paddle, particles } = gameState;
 
       // Draw paddles
       context.fillStyle = '#c24d2c';
       context.fillRect(0, paddle.player.y, paddle.width, paddle.height);
-      context.fillRect(canvas.width - paddle.width, paddle.computer.y, paddle.width, paddle.height);
+      context.fillRect(width - paddle.width, paddle.computer.y, paddle.width, paddle.height);
 
       // Draw ball
       context.beginPath();
@@ -28,8 +27,8 @@ const PongCanvas = forwardRef(({ gameState }, ref) => {
       // Draw center line
       context.beginPath();
       context.setLineDash([5, 15]);
-      context.moveTo(canvas.width / 2, 0);
-      context.lineTo(canvas.width / 2, canvas.height);
+      context.moveTo(width / 2, 0);
+      context.lineTo(width / 2, height);
       context.strokeStyle = '#3e4a61';
       context.stroke();
       context.closePath();
@@ -46,16 +45,18 @@ const PongCanvas = forwardRef(({ gameState }, ref) => {
       requestAnimationFrame(render);
     };
     render();
-  }, [gameState, ref]);
+  }, [gameState, width, height]);
 
   return (
     <canvas
-      ref={ref}
-      className="w-full h-full border-2 border-[#c24d2c]"
+      ref={canvasRef}
+      width={width}
+      height={height}
+      onMouseMove={handleMouseMove}
+      className="border-2 border-[#c24d2c]"
+      style={{ width: '100%', maxWidth: `${width}px`, height: 'auto', aspectRatio: `${width} / ${height}` }}
     />
   );
-});
-
-PongCanvas.displayName = 'PongCanvas';
+};
 
 export default PongCanvas;
