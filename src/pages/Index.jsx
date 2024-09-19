@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -11,6 +11,12 @@ import PongGame from '../components/PongGame';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState('ai-development');
+  const sectionRefs = {
+    'ai-development': useRef(null),
+    'about': useRef(null),
+    'projects': useRef(null),
+    'contact': useRef(null),
+  };
 
   const sections = [
     { id: 'ai-development', title: 'AI Development', component: <AIDevelopmentSection /> },
@@ -19,21 +25,40 @@ const Index = () => {
     { id: 'contact', title: 'Contact', component: <ContactSection /> },
   ];
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY + window.innerHeight / 2;
+      for (const section of sections) {
+        const element = sectionRefs[section.id].current;
+        if (element.offsetTop <= scrollPosition && element.offsetTop + element.offsetHeight > scrollPosition) {
+          setActiveSection(section.id);
+          break;
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToSection = (sectionId) => {
+    sectionRefs[sectionId].current.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
-    <div className="min-h-screen relative overflow-hidden">
+    <div className="min-h-screen relative">
       <div 
-        className="fixed inset-0 bg-cover bg-center bg-no-repeat blur-sm opacity-50"
+        className="fixed inset-0 bg-cover bg-center bg-no-repeat blur-sm opacity-50 z-0"
         style={{ backgroundImage: "url('/ai-development.jpg')" }}
       ></div>
       <div className="relative z-10">
-        <ProfileBubble setActiveSection={setActiveSection} />
+        <ProfileBubble scrollToSection={scrollToSection} />
         <main>
           {sections.map((section) => (
             <Card 
               key={section.id}
-              className={`min-h-screen w-full absolute top-0 left-0 transition-opacity duration-500 ${
-                activeSection === section.id ? 'opacity-100 z-20' : 'opacity-0 z-10'
-              } bg-gradient-to-br from-[#1a2639] to-[#3e4a61] text-[#d9dad7]`}
+              ref={sectionRefs[section.id]}
+              className="min-h-screen w-full bg-gradient-to-br from-[#1a2639] to-[#3e4a61] text-[#d9dad7]"
             >
               <CardContent className="p-0 h-full">
                 {section.component}
@@ -46,7 +71,7 @@ const Index = () => {
   );
 };
 
-const ProfileBubble = ({ setActiveSection }) => (
+const ProfileBubble = ({ scrollToSection }) => (
   <Popover>
     <PopoverTrigger asChild>
       <Avatar className="w-16 h-16 fixed top-4 left-4 z-50 cursor-pointer hover:ring-2 hover:ring-[#c24d2c] transition-all duration-300">
@@ -60,7 +85,7 @@ const ProfileBubble = ({ setActiveSection }) => (
           {['AI Development', 'About', 'Projects', 'Contact'].map((section) => (
             <li key={section}>
               <button
-                onClick={() => setActiveSection(section.toLowerCase().replace(' ', '-'))}
+                onClick={() => scrollToSection(section.toLowerCase().replace(' ', '-'))}
                 className="w-full text-left px-2 py-1 hover:bg-[#3e4a61] rounded transition-colors"
               >
                 {section}
