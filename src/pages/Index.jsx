@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
-import ProfileBubble from '../components/ProfileBubble';
+import MenuBubble from '../components/MenuBubble';
 import AIDevelopmentSection from '../components/AIDevelopmentSection';
 import AboutSection from '../components/AboutSection';
 import ProjectsSection from '../components/ProjectsSection';
@@ -50,7 +50,7 @@ const Index = () => {
       ></div>
       <div className="fixed inset-0 bg-black bg-opacity-50 z-10"></div>
       <div className="relative z-20">
-        <ProfileBubble scrollToSection={scrollToSection} />
+        <MenuBubble scrollToSection={scrollToSection} />
         <main>
           {sections.map((section) => (
             <div 
