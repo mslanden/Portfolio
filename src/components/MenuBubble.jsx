@@ -42,7 +42,7 @@ const MenuBubble = ({ scrollToSection }) => {
           <MenuIcon className="h-6 w-6 text-[#d9dad7]" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-48 p-0 bg-transparent border-none shadow-none">
+      <PopoverContent className="w-48 p-0 bg-transparent border-none shadow-none" side="left" align="start" sideOffset={20}>
         <AnimatePresence>
           {isOpen && (
             <motion.nav
@@ -50,6 +50,7 @@ const MenuBubble = ({ scrollToSection }) => {
               initial="hidden"
               animate="visible"
               exit="hidden"
+              className="pl-4" // Add left padding to move buttons slightly to the right
             >
               <ul className="space-y-2">
                 {menuItems.map((section, index) => (
@@ -59,7 +60,7 @@ const MenuBubble = ({ scrollToSection }) => {
                         scrollToSection(section.toLowerCase());
                         setIsOpen(false);
                       }}
-                      className="w-full text-left px-4 py-2 bg-[#1a2639] text-[#d9dad7] rounded-full hover:bg-[#3e4a61] transition-colors border border-[#c24d2c]"
+                      className="w-full text-left px-4 py-2 bg-[#c24d2c] text-[#d9dad7] rounded-full hover:bg-[#d9dad7] hover:text-[#1a2639] transition-colors border border-[#c24d2c]"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
