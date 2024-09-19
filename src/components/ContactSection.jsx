@@ -14,7 +14,12 @@ const ContactSection = () => (
         <CardContent>
           <p className="text-xl mb-6 text-center text-[#d9dad7]">I'm always open to new opportunities and collaborations.</p>
           <div className="flex justify-center space-x-4">
-            <Button variant="outline" size="icon" className="bg-transparent border-[#c24d2c] text-[#c24d2c] hover:bg-[#c24d2c] hover:text-[#1a2639] transition-colors">
+            <Button 
+              variant="outline" 
+              size="icon" 
+              className="bg-transparent border-[#c24d2c] text-[#c24d2c] hover:bg-[#c24d2c] hover:text-[#1a2639] transition-colors"
+              onClick={() => window.open('https://github.com/mslanden/mslanden.github.io', '_blank')}
+            >
               <GithubIcon className="h-5 w-5" />
             </Button>
             <Button variant="outline" size="icon" className="bg-transparent border-[#c24d2c] text-[#c24d2c] hover:bg-[#c24d2c] hover:text-[#1a2639] transition-colors">
