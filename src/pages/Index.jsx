@@ -10,12 +10,12 @@ import PongGame from '../components/PongGame';
 const Index = () => {
   return (
     <div className="h-screen overflow-y-scroll snap-y snap-mandatory">
-      <header className="fixed top-0 left-0 w-full bg-white bg-opacity-80 z-50 p-4">
+      <header className="fixed top-0 left-0 w-full bg-[#1a2639] bg-opacity-80 z-50 p-4">
         <nav>
           <ul className="flex justify-center space-x-4">
             {['AI Development', 'About', 'Projects', 'Contact'].map((section) => (
               <li key={section}>
-                <a href={`#${section.toLowerCase().replace(' ', '-')}`} className="text-teal-600 hover:text-orange-500 transition-colors">
+                <a href={`#${section.toLowerCase().replace(' ', '-')}`} className="text-[#c24d2c] hover:text-[#d9dad7] transition-colors">
                   {section}
                 </a>
               </li>
@@ -35,44 +35,37 @@ const Index = () => {
 };
 
 const AIDevelopmentSection = () => (
-  <section id="ai-development" className="min-h-screen flex items-center justify-center snap-start p-8">
-    <Card className="w-full h-full max-w-7xl mx-auto overflow-hidden">
-      <CardContent className="p-0 relative h-full">
-        <div className="absolute inset-0 bg-gradient-to-br from-black via-transparent to-black opacity-50"></div>
+  <section id="ai-development" className="min-h-screen flex items-center justify-center snap-start">
+    <Card className="w-full h-full max-w-none mx-auto overflow-hidden">
+      <CardContent className="p-0 relative h-screen">
         <img 
           src="/ai-development.jpg"  
           className="w-full h-full object-cover"
           alt="AI Development"
         />
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-8">
-          <h1 className="text-5xl font-bold mb-4 text-center">AI Development</h1>
-          <p className="text-xl text-center max-w-2xl">
-            Exploring the frontiers of artificial intelligence and its applications in modern technology.
-          </p>
-        </div>
       </CardContent>
     </Card>
   </section>
 );
 
 const AboutSection = () => (
-  <section id="about" className="min-h-screen flex items-center justify-center snap-start bg-gradient-to-br from-orange-100 to-teal-100 p-8">
+  <section id="about" className="min-h-screen flex items-center justify-center snap-start bg-gradient-to-br from-[#1a2639] to-[#3e4a61] p-8">
     <div className="max-w-4xl">
-      <Card className="mb-8">
+      <Card className="mb-8 bg-[#d9dad7] bg-opacity-90">
         <CardHeader>
-          <CardTitle className="text-3xl font-bold text-teal-700">About Me</CardTitle>
+          <CardTitle className="text-3xl font-bold text-[#1a2639]">About Me</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col md:flex-row items-center gap-8">
-            <img src="/marcelino-landen.jpg" alt="Marcelino Landen" className="w-48 h-48 rounded-full mb-4 border-4 border-orange-500 shadow-lg object-cover animate-float" />
+            <img src="/marcelino-landen.jpg" alt="Marcelino Landen" className="w-48 h-48 rounded-full mb-4 border-4 border-[#c24d2c] shadow-lg object-cover animate-float" />
             <div>
-              <h1 className="text-2xl font-bold text-orange-600 mb-2">Marcelino Landen</h1>
-              <p className="text-teal-600 mb-4">Web Developer</p>
-              <p className="text-teal-800 mb-4">
+              <h1 className="text-2xl font-bold text-[#c24d2c] mb-2">Marcelino Landen</h1>
+              <p className="text-[#3e4a61] mb-4">Web Developer</p>
+              <p className="text-[#1a2639] mb-4">
                 Hello! I'm Marcelino Landen, a web developer with a passion for creating beautiful and functional websites. 
                 I specialize in React, Node.js, and modern web technologies, bringing a splash of creativity to every project.
               </p>
-              <p className="text-teal-800">
+              <p className="text-[#1a2639]">
                 When I'm not coding, you can find me exploring new technologies, contributing to open-source projects, 
                 or experimenting with digital art to fuel my creative spirit.
               </p>
@@ -85,10 +78,10 @@ const AboutSection = () => (
 );
 
 const ProjectsSection = () => (
-  <section id="projects" className="min-h-screen flex items-center justify-center snap-start bg-gradient-to-br from-teal-100 to-orange-100 p-8">
-    <Card className="w-full max-w-4xl">
+  <section id="projects" className="min-h-screen flex items-center justify-center snap-start bg-gradient-to-br from-[#3e4a61] to-[#1a2639] p-8">
+    <Card className="w-full max-w-4xl bg-[#d9dad7] bg-opacity-90">
       <CardHeader>
-        <CardTitle className="text-3xl font-bold text-teal-700">My Projects</CardTitle>
+        <CardTitle className="text-3xl font-bold text-[#1a2639]">My Projects</CardTitle>
       </CardHeader>
       <CardContent>
         <ScrollArea className="w-full whitespace-nowrap rounded-md border">
@@ -111,31 +104,31 @@ const ProjectsSection = () => (
 );
 
 const ProjectCard = ({ title, description, children }) => (
-  <Card className="bg-white bg-opacity-80 border-2 border-orange-300 shadow-lg hover:shadow-xl transition-shadow duration-300 transform hover:-translate-y-1 w-[300px] flex-shrink-0 snap-start">
+  <Card className="bg-[#d9dad7] bg-opacity-80 border-2 border-[#c24d2c] shadow-lg hover:shadow-xl transition-shadow duration-300 transform hover:-translate-y-1 w-[300px] flex-shrink-0 snap-start">
     <CardContent className="p-6">
-      <h3 className="text-xl font-semibold mb-2 text-teal-600">{title}</h3>
-      <p className="text-orange-700 mb-4">{description}</p>
+      <h3 className="text-xl font-semibold mb-2 text-[#1a2639]">{title}</h3>
+      <p className="text-[#c24d2c] mb-4">{description}</p>
       {children}
     </CardContent>
   </Card>
 );
 
 const ContactSection = () => (
-  <section id="contact" className="min-h-screen flex items-center justify-center snap-start bg-gradient-to-br from-orange-100 to-teal-100 p-8">
-    <Card className="max-w-4xl">
+  <section id="contact" className="min-h-screen flex items-center justify-center snap-start bg-gradient-to-br from-[#1a2639] to-[#3e4a61] p-8">
+    <Card className="max-w-4xl bg-[#d9dad7] bg-opacity-90">
       <CardHeader>
-        <CardTitle className="text-3xl font-bold text-teal-700">Get in Touch</CardTitle>
+        <CardTitle className="text-3xl font-bold text-[#1a2639]">Get in Touch</CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-xl mb-6 text-orange-700">I'm always open to new opportunities and collaborations.</p>
+        <p className="text-xl mb-6 text-[#c24d2c]">I'm always open to new opportunities and collaborations.</p>
         <div className="flex justify-center space-x-4">
-          <Button variant="outline" size="icon" className="bg-white border-teal-500 text-teal-500 hover:bg-teal-100 hover:scale-110 transition-transform">
+          <Button variant="outline" size="icon" className="bg-[#d9dad7] border-[#1a2639] text-[#1a2639] hover:bg-[#3e4a61] hover:text-[#d9dad7] hover:scale-110 transition-transform">
             <GithubIcon className="h-5 w-5" />
           </Button>
-          <Button variant="outline" size="icon" className="bg-white border-orange-500 text-orange-500 hover:bg-orange-100 hover:scale-110 transition-transform">
+          <Button variant="outline" size="icon" className="bg-[#d9dad7] border-[#c24d2c] text-[#c24d2c] hover:bg-[#3e4a61] hover:text-[#d9dad7] hover:scale-110 transition-transform">
             <LinkedinIcon className="h-5 w-5" />
           </Button>
-          <Button variant="outline" size="icon" className="bg-white border-teal-500 text-teal-500 hover:bg-teal-100 hover:scale-110 transition-transform">
+          <Button variant="outline" size="icon" className="bg-[#d9dad7] border-[#1a2639] text-[#1a2639] hover:bg-[#3e4a61] hover:text-[#d9dad7] hover:scale-110 transition-transform">
             <MailIcon className="h-5 w-5" />
           </Button>
         </div>
@@ -145,7 +138,7 @@ const ContactSection = () => (
 );
 
 const Footer = () => (
-  <footer className="bg-gradient-to-r from-orange-600 to-teal-600 text-white py-4 mt-8 rounded-lg">
+  <footer className="bg-gradient-to-r from-[#c24d2c] to-[#1a2639] text-[#d9dad7] py-4 mt-8 rounded-lg">
     <div className="container mx-auto px-4 text-center">
       <p>&copy; 2024 Marcelino Landen. All rights reserved.</p>
     </div>
