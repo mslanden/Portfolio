@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { isValidMove, isInCheck, getBestMove, pawnPromotion, isDraw } from '../utils/chessUtils';
 import { motion, AnimatePresence } from "framer-motion";
+import ChessMenu from './ChessMenu';
 
 const initialBoard = [
   ['♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜'],
@@ -24,7 +25,7 @@ const ChessGame = () => {
   const [availableMoves, setAvailableMoves] = useState([]);
   const [gameResult, setGameResult] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [gameMode, setGameMode] = useState('ai'); // 'ai' or 'friend'
+  const [gameMode, setGameMode] = useState('ai');
 
   useEffect(() => {
     if (!isWhiteTurn && !isGameOver && gameMode === 'ai') {
@@ -162,45 +163,6 @@ const ChessGame = () => {
     return colors[index];
   };
 
-  const Menu = () => (
-    <div className="flex items-center justify-center space-x-4">
-      <AnimatePresence>
-        {isMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -50 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Button onClick={resetGame} className="bg-[#c24d2c] text-[#d9dad7] hover:bg-[#d9dad7] hover:text-[#1a2639]">
-              Reset Game
-            </Button>
-          </motion.div>
-        )}
-      </AnimatePresence>
-      <Button
-        onClick={() => setIsMenuOpen(!isMenuOpen)}
-        className="bg-[#c24d2c] text-[#d9dad7] hover:bg-[#d9dad7] hover:text-[#1a2639]"
-      >
-        Menu
-      </Button>
-      <AnimatePresence>
-        {isMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 50 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Button onClick={toggleGameMode} className="bg-[#c24d2c] text-[#d9dad7] hover:bg-[#d9dad7] hover:text-[#1a2639]">
-              {gameMode === 'ai' ? 'Play with Friend' : 'Play with AI'}
-            </Button>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-
   return (
     <div className="flex flex-col items-center">
       <div className="grid grid-cols-8 gap-1 mb-4">
@@ -227,7 +189,13 @@ const ChessGame = () => {
            "Game over. It's a draw."}
         </p>
       )}
-      <Menu />
+      <ChessMenu
+        isMenuOpen={isMenuOpen}
+        setIsMenuOpen={setIsMenuOpen}
+        resetGame={resetGame}
+        toggleGameMode={toggleGameMode}
+        gameMode={gameMode}
+      />
       {promotionPawn && (
         <div className="mt-4">
           <p className="text-[#d9dad7]">Choose promotion piece:</p>
