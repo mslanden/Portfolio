@@ -14,7 +14,7 @@ const AIDevelopmentSection = () => (
         AI Development
       </motion.h2>
       <motion.p 
-        className="text-lg sm:text-xl text-[#d9dad7] text-center mb-8 leading-relaxed"
+        className="text-lg sm:text-xl text-gray-200 text-center mb-8 leading-relaxed"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
@@ -33,14 +33,14 @@ const AIDevelopmentSection = () => (
 
 const FuturisticBox = ({ title, description }) => (
   <motion.div 
-    className="bg-[#d9dad7] bg-opacity-10 p-4 rounded-lg border border-[#c24d2c] shadow-md backdrop-blur-sm"
+    className="bg-[#d9dad7] bg-opacity-10 p-4 rounded-lg border border-[#c24d2c] shadow-md"
     whileHover={{ scale: 1.05, boxShadow: "0px 0px 15px rgba(194, 77, 44, 0.5)" }}
     initial={{ opacity: 0, scale: 0.9 }}
     animate={{ opacity: 1, scale: 1 }}
     transition={{ duration: 0.3 }}
   >
     <h3 className="text-xl sm:text-2xl font-semibold mb-2 text-[#c24d2c]" style={{ fontFamily: "'Orbitron', sans-serif" }}>{title}</h3>
-    <p className="text-[#d9dad7] text-sm sm:text-base leading-relaxed">{description}</p>
+    <p className="text-gray-200 text-sm sm:text-base leading-relaxed">{description}</p>
   </motion.div>
 );
 
