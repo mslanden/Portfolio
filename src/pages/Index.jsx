@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { GithubIcon, LinkedinIcon, MailIcon } from 'lucide-react';
 import ChessGame from '../components/ChessGame';
 import WebsiteAnalyzer from '../components/WebsiteAnalyzer';
@@ -75,17 +76,19 @@ const ProjectsSection = () => (
       <CardTitle className="text-3xl font-bold text-teal-700">My Projects</CardTitle>
     </CardHeader>
     <CardContent>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <ProjectCard title="Chess Game" description="A vibrant chess game built with React.">
-          <ChessGame />
-        </ProjectCard>
-        <ProjectCard title="Website Analyzer" description="Analyze websites and generate colorful insights.">
-          <WebsiteAnalyzer />
-        </ProjectCard>
-        <ProjectCard title="Pong Game" description="A classic Pong game with a splash of color.">
-          <PongGame />
-        </ProjectCard>
-      </div>
+      <ScrollArea className="h-[500px] w-full pr-4">
+        <div className="space-y-6">
+          <ProjectCard title="Chess Game" description="A vibrant chess game built with React.">
+            <ChessGame />
+          </ProjectCard>
+          <ProjectCard title="Website Analyzer" description="Analyze websites and generate colorful insights.">
+            <WebsiteAnalyzer />
+          </ProjectCard>
+          <ProjectCard title="Pong Game" description="A classic Pong game with a splash of color.">
+            <PongGame />
+          </ProjectCard>
+        </div>
+      </ScrollArea>
     </CardContent>
   </Card>
 );
