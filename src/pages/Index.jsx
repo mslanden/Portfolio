@@ -44,8 +44,15 @@ const Header = () => (
 
 const HeroSection = ({ scrollY }) => (
   <section className="bg-gradient-to-r from-orange-500 to-teal-500 text-white py-20 relative overflow-hidden">
-    <div className="container mx-auto px-4 text-center relative" style={{ transform: `translateY(${scrollY * 0.5}px)` }}>
-      <h2 className="text-4xl font-bold mb-4">Welcome to My Creative Space</h2>
+    <div className="container mx-auto px-4 text-center relative z-10" style={{ transform: `translateY(${scrollY * 0.5}px)` }}>
+      <h2 className="text-4xl font-bold mb-4 relative inline-block">
+        Welcome to My Creative Space
+        <span className="absolute top-0 left-0 w-full h-full overflow-hidden">
+          {[...Array(5)].map((_, index) => (
+            <span key={index} className={`shooting-star shooting-star-${index + 1}`}></span>
+          ))}
+        </span>
+      </h2>
       <p className="text-xl mb-8">I'm Marcelino Landen, a passionate developer crafting vibrant web experiences</p>
       <Button variant="secondary" size="lg" className="bg-white text-orange-500 hover:bg-orange-100">View My Work</Button>
     </div>
