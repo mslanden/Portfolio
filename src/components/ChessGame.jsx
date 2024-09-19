@@ -122,30 +122,44 @@ const ChessGame = () => {
   };
 
   return (
-    <div className="flex flex-col items-center">
-      <div className="grid grid-cols-8 gap-1 mb-4">
+    <div className="flex flex-col items-center bg-gray-900 p-8 rounded-lg shadow-2xl">
+      <div className="grid grid-cols-8 gap-1 mb-4 bg-gray-800 p-4 rounded-lg shadow-inner">
         {board.map((row, rowIndex) =>
           row.map((cell, colIndex) => (
             <div
               key={`${rowIndex}-${colIndex}`}
-              className={`w-10 h-10 flex items-center justify-center text-2xl cursor-pointer ${
-                (rowIndex + colIndex) % 2 === 0 ? 'bg-gray-300' : 'bg-gray-600'
-              } ${selectedPiece && selectedPiece.row === rowIndex && selectedPiece.col === colIndex ? 'bg-yellow-300' : ''}`}
+              className={`w-12 h-12 flex items-center justify-center text-3xl cursor-pointer transition-all duration-300 ${
+                (rowIndex + colIndex) % 2 === 0 ? 'bg-gray-700' : 'bg-gray-600'
+              } ${selectedPiece && selectedPiece.row === rowIndex && selectedPiece.col === colIndex ? 'bg-blue-500 bg-opacity-50 shadow-lg' : ''}
+              hover:bg-opacity-80 hover:shadow-lg`}
               onClick={() => handleCellClick(rowIndex, colIndex)}
             >
-              {cell}
+              <span className={`transition-all duration-300 ${cell ? 'text-neon-glow' : ''}`}>
+                {cell}
+              </span>
             </div>
           ))
         )}
       </div>
-      <p className="mb-4">{message}</p>
-      <Button onClick={resetGame}>Reset Game</Button>
+      <p className="mb-4 text-cyan-300 text-lg font-semibold">{message}</p>
+      <Button 
+        onClick={resetGame}
+        className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl"
+      >
+        Reset Game
+      </Button>
       {promotionPawn && (
-        <div className="mt-4">
-          <p>Choose promotion piece:</p>
+        <div className="mt-4 bg-gray-800 p-4 rounded-lg shadow-lg">
+          <p className="text-cyan-300 mb-2">Choose promotion piece:</p>
           <div className="flex space-x-2">
             {['♕', '♖', '♗', '♘'].map((piece) => (
-              <Button key={piece} onClick={() => handlePromotion(piece)}>{piece}</Button>
+              <Button 
+                key={piece} 
+                onClick={() => handlePromotion(piece)}
+                className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl"
+              >
+                {piece}
+              </Button>
             ))}
           </div>
         </div>
