@@ -2,18 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { isValidMove, isInCheck, getBestMove, pawnPromotion, isDraw } from '../utils/chessUtils';
 
-const ChessGame = () => {
-  const initialBoard = [
-    ['♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜'],
-    ['♟', '♟', '♟', '♟', '♟', '♟', '♟', '♟'],
-    ['', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', ''],
-    ['', '', '', '', '', '', '', ''],
-    ['♙', '♙', '♙', '♙', '♙', '♙', '♙', '♙'],
-    ['♖', '♘', '♗', '♕', '♔', '♗', '♘', '♖']
-  ];
+const initialBoard = [
+  ['♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜'],
+  ['♟', '♟', '♟', '♟', '♟', '♟', '♟', '♟'],
+  ['', '', '', '', '', '', '', ''],
+  ['', '', '', '', '', '', '', ''],
+  ['', '', '', '', '', '', '', ''],
+  ['', '', '', '', '', '', '', ''],
+  ['♙', '♙', '♙', '♙', '♙', '♙', '♙', '♙'],
+  ['♖', '♘', '♗', '♕', '♔', '♗', '♘', '♖']
+];
 
+const ChessGame = () => {
   const [board, setBoard] = useState(initialBoard);
   const [selectedPiece, setSelectedPiece] = useState(null);
   const [isWhiteTurn, setIsWhiteTurn] = useState(true);
@@ -33,37 +33,42 @@ const ChessGame = () => {
     if (isGameOver || !isWhiteTurn) return;
 
     if (selectedPiece) {
-      const piece = board[selectedPiece.row][selectedPiece.col];
-      const isWhitePiece = piece.charCodeAt(0) >= 9812 && piece.charCodeAt(0) <= 9817;
+      movePiece(row, col);
+    } else {
+      selectPiece(row, col);
+    }
+  };
 
-      if (isWhitePiece) {
-        if (isValidMove(piece, selectedPiece.row, selectedPiece.col, row, col, board)) {
-          const newBoard = board.map(row => [...row]);
-          newBoard[row][col] = piece;
-          newBoard[selectedPiece.row][selectedPiece.col] = '';
-
-          if (!isInCheck(newBoard, true)) {
-            setBoard(newBoard);
-            if (piece === '♙' && row === 0) {
-              setPromotionPawn({ row, col });
-            } else {
-              finishTurn(newBoard);
-            }
-          } else {
-            setMessage("Invalid move: King would be in check");
-          }
-        } else {
-          setMessage("Invalid move");
-        }
-      } else {
-        setMessage("It's your turn (White)");
-      }
-      setSelectedPiece(null);
-      setAvailableMoves([]);
-    } else if (board[row][col] && board[row][col].charCodeAt(0) >= 9812 && board[row][col].charCodeAt(0) <= 9817) {
+  const selectPiece = (row, col) => {
+    const piece = board[row][col];
+    if (piece && piece.charCodeAt(0) >= 9812 && piece.charCodeAt(0) <= 9817) {
       setSelectedPiece({ row, col });
       setAvailableMoves(getAvailableMoves(row, col));
     }
+  };
+
+  const movePiece = (row, col) => {
+    const piece = board[selectedPiece.row][selectedPiece.col];
+    if (isValidMove(piece, selectedPiece.row, selectedPiece.col, row, col, board)) {
+      const newBoard = board.map(row => [...row]);
+      newBoard[row][col] = piece;
+      newBoard[selectedPiece.row][selectedPiece.col] = '';
+
+      if (!isInCheck(newBoard, true)) {
+        setBoard(newBoard);
+        if (piece === '♙' && row === 0) {
+          setPromotionPawn({ row, col });
+        } else {
+          finishTurn(newBoard);
+        }
+      } else {
+        setMessage("Invalid move: King would be in check");
+      }
+    } else {
+      setMessage("Invalid move");
+    }
+    setSelectedPiece(null);
+    setAvailableMoves([]);
   };
 
   const getAvailableMoves = (row, col) => {
@@ -164,10 +169,10 @@ const ChessGame = () => {
           row.map((cell, colIndex) => (
             <div
               key={`${rowIndex}-${colIndex}`}
-              className={`w-10 h-10 flex items-center justify-center text-2xl cursor-pointer ${
-                (rowIndex + colIndex) % 2 === 0 ? 'bg-gray-300' : 'bg-gray-600'
-              } ${selectedPiece && selectedPiece.row === rowIndex && selectedPiece.col === colIndex ? 'bg-yellow-300' : ''}
-              ${availableMoves.some(move => move.row === rowIndex && move.col === colIndex) ? 'bg-green-300' : ''}`}
+              className={`w-10 h-10 flex items-center justify-center text-2xl cursor-pointer
+                ${(rowIndex + colIndex) % 2 === 0 ? 'bg-[#3e4a61]' : 'bg-[#1a2639]'}
+                ${selectedPiece && selectedPiece.row === rowIndex && selectedPiece.col === colIndex ? 'bg-[#c24d2c]' : ''}
+                ${availableMoves.some(move => move.row === rowIndex && move.col === colIndex) ? 'bg-[#d9dad7] bg-opacity-30' : ''}`}
               onClick={() => handleCellClick(rowIndex, colIndex)}
             >
               {cell}
@@ -175,21 +180,21 @@ const ChessGame = () => {
           ))
         )}
       </div>
-      <p className="mb-4">{message}</p>
+      <p className="mb-4 text-[#d9dad7]">{message}</p>
       {gameResult && (
-        <p className="text-xl font-bold mb-4">
+        <p className="text-xl font-bold mb-4 text-[#c24d2c]">
           {gameResult === "You win" ? "Congratulations! You win!" : 
            gameResult === "You lose" ? "Game over. You lose." : 
            "Game over. It's a draw."}
         </p>
       )}
-      <Button onClick={resetGame}>Reset Game</Button>
+      <Button onClick={resetGame} className="bg-[#c24d2c] text-[#d9dad7] hover:bg-[#d9dad7] hover:text-[#1a2639]">Reset Game</Button>
       {promotionPawn && (
         <div className="mt-4">
-          <p>Choose promotion piece:</p>
+          <p className="text-[#d9dad7]">Choose promotion piece:</p>
           <div className="flex space-x-2">
             {['♕', '♖', '♗', '♘'].map((piece) => (
-              <Button key={piece} onClick={() => handlePromotion(piece)}>{piece}</Button>
+              <Button key={piece} onClick={() => handlePromotion(piece)} className="bg-[#3e4a61] text-[#d9dad7] hover:bg-[#c24d2c]">{piece}</Button>
             ))}
           </div>
         </div>
