@@ -10,15 +10,15 @@ const Index = () => {
   const [activeSection, setActiveSection] = useState('ai-development');
   const sectionRefs = {
     'ai-development': useRef(null),
-    'about': useRef(null),
     'projects': useRef(null),
+    'about': useRef(null),
     'contact': useRef(null),
   };
 
   const sections = [
     { id: 'ai-development', title: 'AI-Driven Innovations', component: <AIDevelopmentSection /> },
-    { id: 'about', title: 'About', component: <AboutSection /> },
     { id: 'projects', title: 'Projects', component: <ProjectsSection /> },
+    { id: 'about', title: 'About', component: <AboutSection /> },
     { id: 'contact', title: 'Contact', component: <ContactSection /> },
   ];
 
