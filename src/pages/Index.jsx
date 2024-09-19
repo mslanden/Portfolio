@@ -9,47 +9,47 @@ import PongGame from '../components/PongGame';
 
 const Index = () => {
   return (
-    <div className="h-screen overflow-y-scroll snap-y snap-mandatory">
-      <header className="fixed top-0 left-0 w-full bg-[#1a2639] bg-opacity-80 z-50 p-4">
-        <nav>
-          <ul className="flex justify-center space-x-4">
-            {['AI Development', 'About', 'Projects', 'Contact'].map((section) => (
-              <li key={section}>
-                <a href={`#${section.toLowerCase().replace(' ', '-')}`} className="text-[#c24d2c] hover:text-[#d9dad7] transition-colors">
-                  {section}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </header>
-      <main>
-        <AIDevelopmentSection />
-        <AboutSection />
-        <ProjectsSection />
-        <ContactSection />
-      </main>
-      <Footer />
+    <div className="min-h-screen relative">
+      <div 
+        className="fixed inset-0 bg-cover bg-center bg-no-repeat blur-3xl"
+        style={{ backgroundImage: "url('/ai-development.jpg')" }}
+      ></div>
+      <div className="relative z-10">
+        <header className="fixed top-0 left-0 w-full bg-[#1a2639] bg-opacity-80 z-50 p-4">
+          <nav>
+            <ul className="flex justify-center space-x-4">
+              {['AI Development', 'About', 'Projects', 'Contact'].map((section) => (
+                <li key={section}>
+                  <a href={`#${section.toLowerCase().replace(' ', '-')}`} className="text-[#c24d2c] hover:text-[#d9dad7] transition-colors">
+                    {section}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </header>
+        <main className="pt-16">
+          <AIDevelopmentSection />
+          <AboutSection />
+          <ProjectsSection />
+          <ContactSection />
+        </main>
+        <Footer />
+      </div>
     </div>
   );
 };
 
 const AIDevelopmentSection = () => (
   <section id="ai-development" className="min-h-screen flex items-center justify-center snap-start">
-    <Card className="w-full h-full max-w-none mx-auto overflow-hidden">
-      <CardContent className="p-0 relative h-screen">
-        <img 
-          src="/ai-development.jpg"  
-          className="w-full h-full object-cover"
-          alt="AI Development"
-        />
-      </CardContent>
-    </Card>
+    <div className="w-full h-full flex items-center justify-center">
+      {/* Empty section to maintain layout */}
+    </div>
   </section>
 );
 
 const AboutSection = () => (
-  <section id="about" className="min-h-screen flex items-center justify-center snap-start bg-gradient-to-br from-[#1a2639] to-[#3e4a61] p-8">
+  <section id="about" className="min-h-screen flex items-center justify-center snap-start p-8">
     <div className="max-w-4xl">
       <Card className="mb-8 bg-[#d9dad7] bg-opacity-90">
         <CardHeader>
@@ -78,7 +78,7 @@ const AboutSection = () => (
 );
 
 const ProjectsSection = () => (
-  <section id="projects" className="min-h-screen flex items-center justify-center snap-start bg-gradient-to-br from-[#3e4a61] to-[#1a2639] p-8">
+  <section id="projects" className="min-h-screen flex items-center justify-center snap-start p-8">
     <Card className="w-full max-w-4xl bg-[#d9dad7] bg-opacity-90">
       <CardHeader>
         <CardTitle className="text-3xl font-bold text-[#1a2639]">My Projects</CardTitle>
@@ -114,7 +114,7 @@ const ProjectCard = ({ title, description, children }) => (
 );
 
 const ContactSection = () => (
-  <section id="contact" className="min-h-screen flex items-center justify-center snap-start bg-gradient-to-br from-[#1a2639] to-[#3e4a61] p-8">
+  <section id="contact" className="min-h-screen flex items-center justify-center snap-start p-8">
     <Card className="max-w-4xl bg-[#d9dad7] bg-opacity-90">
       <CardHeader>
         <CardTitle className="text-3xl font-bold text-[#1a2639]">Get in Touch</CardTitle>
@@ -138,7 +138,7 @@ const ContactSection = () => (
 );
 
 const Footer = () => (
-  <footer className="bg-gradient-to-r from-[#c24d2c] to-[#1a2639] text-[#d9dad7] py-4 mt-8 rounded-lg">
+  <footer className="bg-[#1a2639] bg-opacity-80 text-[#d9dad7] py-4 mt-8">
     <div className="container mx-auto px-4 text-center">
       <p>&copy; 2024 Marcelino Landen. All rights reserved.</p>
     </div>
