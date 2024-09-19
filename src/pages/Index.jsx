@@ -5,6 +5,7 @@ import AIDevelopmentSection from '../components/AIDevelopmentSection';
 import AboutSection from '../components/AboutSection';
 import ProjectsSection from '../components/ProjectsSection';
 import ContactSection from '../components/ContactSection';
+import MeteorEffect from '../components/MeteorEffect';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState('ai-development');
@@ -49,6 +50,7 @@ const Index = () => {
         style={{ backgroundImage: "url('/ai-development.jpg')" }}
       ></div>
       <div className="fixed inset-0 bg-black bg-opacity-50 z-10"></div>
+      <MeteorEffect />
       <div className="relative z-20">
         <ProfileBubble scrollToSection={scrollToSection} />
         <main>
