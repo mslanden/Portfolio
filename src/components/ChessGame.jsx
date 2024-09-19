@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { isValidMove, isInCheck, getBestMove, pawnPromotion } from '../utils/chessUtils';
+import { isValidMove, isInCheck, getBestMove, pawnPromotion, isDraw } from '../utils/chessUtils';
 
 const ChessGame = () => {
   const initialBoard = [
@@ -104,7 +104,7 @@ const ChessGame = () => {
     } else {
       setIsGameOver(true);
       setMessage("Game over: Stalemate");
-      setGameResult("Stalemate");
+      setGameResult("Draw");
     }
   };
 
@@ -128,7 +128,11 @@ const ChessGame = () => {
       if (!hasValidMove) {
         setIsGameOver(true);
         setMessage("Game over: Stalemate");
-        setGameResult("Stalemate");
+        setGameResult("Draw");
+      } else if (isDraw(newBoard)) {
+        setIsGameOver(true);
+        setMessage("Game over: Draw");
+        setGameResult("Draw");
       }
     }
   };
@@ -174,7 +178,9 @@ const ChessGame = () => {
       <p className="mb-4">{message}</p>
       {gameResult && (
         <p className="text-xl font-bold mb-4">
-          {gameResult === "You win" ? "Congratulations! You win!" : gameResult === "You lose" ? "Game over. You lose." : "Game over. It's a stalemate."}
+          {gameResult === "You win" ? "Congratulations! You win!" : 
+           gameResult === "You lose" ? "Game over. You lose." : 
+           "Game over. It's a draw."}
         </p>
       )}
       <Button onClick={resetGame}>Reset Game</Button>

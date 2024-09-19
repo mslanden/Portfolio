@@ -163,4 +163,17 @@ const pawnPromotion = (board, row, col, newPiece) => {
   return newBoard;
 };
 
-export { isValidMove, isOpponentPiece, isInCheck, getBestMove, pawnPromotion };
+const isDraw = (board) => {
+  // Check for insufficient material
+  const pieces = board.flat().filter(piece => piece !== '');
+  if (pieces.length === 2) return true; // Only kings left
+  if (pieces.length === 3 && (pieces.includes('♗') || pieces.includes('♝') || pieces.includes('♘') || pieces.includes('♞'))) return true; // King and bishop/knight vs king
+
+  // Check for threefold repetition (simplified version)
+  // In a real implementation, you'd need to keep track of the board state history
+  // Here we're just checking if the current board state has occurred before
+  // This is a placeholder and won't actually detect threefold repetition
+  return false;
+};
+
+export { isValidMove, isOpponentPiece, isInCheck, getBestMove, pawnPromotion, isDraw };
