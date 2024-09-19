@@ -1,21 +1,22 @@
-import React, { useRef, useEffect } from 'react';
+import React, { forwardRef, useEffect } from 'react';
 
-const PongCanvas = ({ width, height, gameState, handleMouseMove }) => {
-  const canvasRef = useRef(null);
-
+const PongCanvas = forwardRef(({ gameState }, ref) => {
   useEffect(() => {
-    const canvas = canvasRef.current;
+    const canvas = ref.current;
+    if (!canvas) return;
+
     const context = canvas.getContext('2d');
     const render = () => {
+      if (!canvas) return;
       context.fillStyle = '#1a2639';
-      context.fillRect(0, 0, width, height);
+      context.fillRect(0, 0, canvas.width, canvas.height);
 
       const { ball, paddle, particles } = gameState;
 
       // Draw paddles
       context.fillStyle = '#c24d2c';
       context.fillRect(0, paddle.player.y, paddle.width, paddle.height);
-      context.fillRect(width - paddle.width, paddle.computer.y, paddle.width, paddle.height);
+      context.fillRect(canvas.width - paddle.width, paddle.computer.y, paddle.width, paddle.height);
 
       // Draw ball
       context.beginPath();
@@ -27,8 +28,8 @@ const PongCanvas = ({ width, height, gameState, handleMouseMove }) => {
       // Draw center line
       context.beginPath();
       context.setLineDash([5, 15]);
-      context.moveTo(width / 2, 0);
-      context.lineTo(width / 2, height);
+      context.moveTo(canvas.width / 2, 0);
+      context.lineTo(canvas.width / 2, canvas.height);
       context.strokeStyle = '#3e4a61';
       context.stroke();
       context.closePath();
@@ -45,18 +46,16 @@ const PongCanvas = ({ width, height, gameState, handleMouseMove }) => {
       requestAnimationFrame(render);
     };
     render();
-  }, [gameState, width, height]);
+  }, [gameState, ref]);
 
   return (
     <canvas
-      ref={canvasRef}
-      width={width}
-      height={height}
-      onMouseMove={handleMouseMove}
-      className="border-2 border-[#c24d2c]"
-      style={{ width: '100%', maxWidth: `${width}px`, height: 'auto', aspectRatio: `${width} / ${height}` }}
+      ref={ref}
+      className="w-full h-full border-2 border-[#c24d2c]"
     />
   );
-};
+});
+
+PongCanvas.displayName = 'PongCanvas';
 
 export default PongCanvas;
