@@ -6,7 +6,6 @@ import { GithubIcon, LinkedinIcon, MailIcon } from 'lucide-react';
 import ChessGame from '../components/ChessGame';
 import WebsiteAnalyzer from '../components/WebsiteAnalyzer';
 import PongGame from '../components/PongGame';
-import AIDevelopmentCard from '../components/AIDevelopmentCard';
 
 const Index = () => {
   return (
@@ -72,9 +71,6 @@ const ProjectsSection = () => (
       <CardContent>
         <ScrollArea className="w-full whitespace-nowrap rounded-md border">
           <div className="flex w-max space-x-4 p-4 snap-x snap-mandatory">
-            <ProjectCard title="AI Development">
-              <AIDevelopmentCard />
-            </ProjectCard>
             <ProjectCard title="Chess Game" description="A vibrant chess game built with React.">
               <ChessGame />
             </ProjectCard>
@@ -95,8 +91,8 @@ const ProjectsSection = () => (
 const ProjectCard = ({ title, description, children }) => (
   <Card className="bg-white bg-opacity-80 border-2 border-orange-300 shadow-lg hover:shadow-xl transition-shadow duration-300 transform hover:-translate-y-1 w-[300px] flex-shrink-0 snap-start">
     <CardContent className="p-6">
-      {title !== "AI Development" && <h3 className="text-xl font-semibold mb-2 text-teal-600">{title}</h3>}
-      {description && <p className="text-orange-700 mb-4">{description}</p>}
+      <h3 className="text-xl font-semibold mb-2 text-teal-600">{title}</h3>
+      <p className="text-orange-700 mb-4">{description}</p>
       {children}
     </CardContent>
   </Card>
