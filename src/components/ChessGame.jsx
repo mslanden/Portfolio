@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { isValidMove, isInCheck, getBestMove, pawnPromotion, isDraw } from '../utils/chessUtils';
-import { motion, AnimatePresence } from "framer-motion";
 import ChessMenu from './ChessMenu';
 
 const initialBoard = [

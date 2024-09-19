@@ -5,12 +5,12 @@ import { motion, AnimatePresence } from "framer-motion";
 const ChessMenu = ({ isMenuOpen, setIsMenuOpen, resetGame, toggleGameMode, gameMode }) => {
   const menuVariants = {
     closed: { opacity: 0, x: 0 },
-    open: { opacity: 1, x: 0, transition: { staggerChildren: 0.1, delayChildren: 0.2 } },
+    open: { opacity: 1, x: 0, transition: { staggerChildren: 0.2, delayChildren: 0.3 } },
   };
 
   const itemVariants = {
     closed: { opacity: 0, x: -20 },
-    open: { opacity: 1, x: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
+    open: { opacity: 1, x: 0, transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } },
   };
 
   return (
