@@ -20,6 +20,7 @@ const ChessGame = () => {
   const [message, setMessage] = useState('Your turn (White)');
   const [isGameOver, setIsGameOver] = useState(false);
   const [promotionPawn, setPromotionPawn] = useState(null);
+  const [availableMoves, setAvailableMoves] = useState([]);
 
   useEffect(() => {
     if (!isWhiteTurn && !isGameOver) {
@@ -57,9 +58,29 @@ const ChessGame = () => {
         setMessage("It's your turn (White)");
       }
       setSelectedPiece(null);
+      setAvailableMoves([]);
     } else if (board[row][col] && board[row][col].charCodeAt(0) >= 9812 && board[row][col].charCodeAt(0) <= 9817) {
       setSelectedPiece({ row, col });
+      setAvailableMoves(getAvailableMoves(row, col));
     }
+  };
+
+  const getAvailableMoves = (row, col) => {
+    const piece = board[row][col];
+    const moves = [];
+    for (let i = 0; i < 8; i++) {
+      for (let j = 0; j < 8; j++) {
+        if (isValidMove(piece, row, col, i, j, board)) {
+          const newBoard = board.map(row => [...row]);
+          newBoard[i][j] = piece;
+          newBoard[row][col] = '';
+          if (!isInCheck(newBoard, true)) {
+            moves.push({ row: i, col: j });
+          }
+        }
+      }
+    }
+    return moves;
   };
 
   const finishTurn = (newBoard) => {
@@ -119,6 +140,7 @@ const ChessGame = () => {
     setMessage('Your turn (White)');
     setIsGameOver(false);
     setPromotionPawn(null);
+    setAvailableMoves([]);
   };
 
   return (
@@ -130,7 +152,8 @@ const ChessGame = () => {
               key={`${rowIndex}-${colIndex}`}
               className={`w-10 h-10 flex items-center justify-center text-2xl cursor-pointer ${
                 (rowIndex + colIndex) % 2 === 0 ? 'bg-gray-300' : 'bg-gray-600'
-              } ${selectedPiece && selectedPiece.row === rowIndex && selectedPiece.col === colIndex ? 'bg-yellow-300' : ''}`}
+              } ${selectedPiece && selectedPiece.row === rowIndex && selectedPiece.col === colIndex ? 'bg-yellow-300' : ''}
+              ${availableMoves.some(move => move.row === rowIndex && move.col === colIndex) ? 'bg-green-300' : ''}`}
               onClick={() => handleCellClick(rowIndex, colIndex)}
             >
               {cell}
