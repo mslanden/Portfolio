@@ -43,7 +43,7 @@ const Index = () => {
 const AIDevelopmentSection = () => (
   <section id="ai-development" className="min-h-screen flex items-center justify-center snap-start">
     <div className="w-full h-full flex items-center justify-center">
-      {/* Empty section to maintain layout */}
+      <img src="/ai-development.jpg" alt="AI Development" className="max-w-full max-h-full object-cover" />
     </div>
   </section>
 );
