@@ -22,10 +22,20 @@ const ContactSection = () => (
             >
               <GithubIcon className="h-5 w-5" />
             </Button>
-            <Button variant="outline" size="icon" className="bg-transparent border-[#c24d2c] text-[#c24d2c] hover:bg-[#c24d2c] hover:text-[#1a2639] transition-colors">
+            <Button 
+              variant="outline" 
+              size="icon" 
+              className="bg-transparent border-[#c24d2c] text-[#c24d2c] hover:bg-[#c24d2c] hover:text-[#1a2639] transition-colors"
+              onClick={() => window.open('https://www.linkedin.com/in/marcelino-landen-52890728a', '_blank')}
+            >
               <LinkedinIcon className="h-5 w-5" />
             </Button>
-            <Button variant="outline" size="icon" className="bg-transparent border-[#c24d2c] text-[#c24d2c] hover:bg-[#c24d2c] hover:text-[#1a2639] transition-colors">
+            <Button 
+              variant="outline" 
+              size="icon" 
+              className="bg-transparent border-[#c24d2c] text-[#c24d2c] hover:bg-[#c24d2c] hover:text-[#1a2639] transition-colors"
+              onClick={() => window.location.href = 'mailto:contact@example.com'}
+            >
               <MailIcon className="h-5 w-5" />
             </Button>
           </div>
