@@ -22,7 +22,7 @@ const Index = () => {
   return (
     <div className="min-h-screen relative overflow-hidden">
       <div 
-        className="fixed inset-0 bg-cover bg-center bg-no-repeat blur-3xl opacity-50"
+        className="fixed inset-0 bg-cover bg-center bg-no-repeat blur-sm opacity-50"
         style={{ backgroundImage: "url('/ai-development.jpg')" }}
       ></div>
       <div className="relative z-10">
