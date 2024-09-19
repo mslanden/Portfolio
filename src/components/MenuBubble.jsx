@@ -59,7 +59,7 @@ const MenuBubble = ({ scrollToSection }) => {
                         scrollToSection(section.toLowerCase());
                         setIsOpen(false);
                       }}
-                      className="w-full px-4 py-2 bg-[#1a2639] text-[#d9dad7] rounded-full hover:bg-[#c24d2c] transition-colors border-2 border-[#c24d2c] text-sm font-medium"
+                      className="w-full text-left px-4 py-2 bg-[#1a2639] text-[#d9dad7] rounded-full hover:bg-[#3e4a61] transition-colors border border-[#c24d2c]"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
