@@ -17,14 +17,16 @@ const AboutSection = () => (
           />
           <div className="text-[#d9dad7]">
             <h2 className="text-2xl font-bold text-[#c24d2c] mb-2">Marcelino Landen</h2>
-            <p className="text-xl mb-4">Web Developer</p>
+            <p className="text-xl mb-4">AI-Focused Developer</p>
             <p className="mb-4">
-              Hello! I'm Marcelino Landen, a web developer with a passion for creating beautiful and functional websites. 
-              I specialize in React, Node.js, and modern web technologies, bringing a splash of creativity to every project.
+              I'm Marcelino Landen, a developer passionate about leveraging AI to create impactful solutions. 
+              With a focus on AI Agents, large language models (LLMs), web design, and game development, 
+              I aim to enhance productivity and deliver cutting-edge projects.
             </p>
-            <p>
-              When I'm not coding, you can find me exploring new technologies, contributing to open-source projects, 
-              or experimenting with digital art to fuel my creative spirit.
+            <p className="mb-4">
+              My work blends creativity, technology, and efficiency to build modern, forward-thinking products 
+              that solve real-world problems. Based in Southern California, I'm constantly exploring how AI 
+              can push boundaries and drive innovation.
             </p>
           </div>
         </CardContent>
