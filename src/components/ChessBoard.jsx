@@ -4,8 +4,8 @@ const ChessBoard = ({ board, selectedPiece, availableMoves, handleCellClick }) =
   const getPieceStyle = (piece) => {
     const isWhitePiece = piece.charCodeAt(0) <= 9817;
     return isWhitePiece
-      ? 'text-white drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)]'
-      : 'text-black drop-shadow-[0_4px_4px_rgba(255,255,255,0.8)]';
+      ? 'text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]'
+      : 'text-black drop-shadow-[0_2px_2px_rgba(255,255,255,0.8)]';
   };
 
   const getAvailableMoveColor = (rowIndex, colIndex) => {
@@ -21,18 +21,17 @@ const ChessBoard = ({ board, selectedPiece, availableMoves, handleCellClick }) =
           row.map((cell, colIndex) => (
             <div
               key={`${rowIndex}-${colIndex}`}
-              className={`aspect-square flex items-center justify-center text-4xl sm:text-5xl cursor-pointer
+              className={`aspect-square flex items-center justify-center text-3xl sm:text-4xl md:text-5xl cursor-pointer
                 ${(rowIndex + colIndex) % 2 === 0 ? 'bg-[#d9dad7]' : 'bg-[#8b9bb4]'}
                 ${selectedPiece && selectedPiece.row === rowIndex && selectedPiece.col === colIndex ? 'bg-[#c24d2c]' : ''}
                 ${availableMoves.some(move => move.row === rowIndex && move.col === colIndex) ? `${getAvailableMoveColor(rowIndex, colIndex)} bg-opacity-50` : ''}`}
               onClick={() => handleCellClick(rowIndex, colIndex)}
             >
               <span 
-                className={`${getPieceStyle(cell)} transition-all duration-200 hover:scale-110 
-                  ${cell ? 'text-stroke-1 text-stroke-black' : ''}
-                  ${cell.charCodeAt(0) <= 9817 ? 'text-stroke-[1px] text-stroke-[#000000]' : ''}`}
+                className={`${getPieceStyle(cell)} transition-all duration-200 hover:scale-110`}
                 style={{
                   WebkitTextStroke: cell.charCodeAt(0) <= 9817 ? '1px #000000' : 'none',
+                  textShadow: cell.charCodeAt(0) <= 9817 ? '0 0 3px #000000' : 'none',
                 }}
               >
                 {cell}
