@@ -21,6 +21,7 @@ const ChessGame = () => {
   const [isGameOver, setIsGameOver] = useState(false);
   const [promotionPawn, setPromotionPawn] = useState(null);
   const [availableMoves, setAvailableMoves] = useState([]);
+  const [gameResult, setGameResult] = useState(null);
 
   useEffect(() => {
     if (!isWhiteTurn && !isGameOver) {
@@ -103,6 +104,7 @@ const ChessGame = () => {
     } else {
       setIsGameOver(true);
       setMessage("Game over: Stalemate");
+      setGameResult("Stalemate");
     }
   };
 
@@ -111,7 +113,13 @@ const ChessGame = () => {
       const hasValidMove = getBestMove(newBoard, isWhiteTurn) !== null;
       if (!hasValidMove) {
         setIsGameOver(true);
-        setMessage(`Checkmate! ${isWhiteTurn ? 'Black' : 'White'} wins!`);
+        if (isWhiteTurn) {
+          setMessage("Checkmate! Black wins!");
+          setGameResult("You lose");
+        } else {
+          setMessage("Checkmate! White wins!");
+          setGameResult("You win");
+        }
       } else {
         setMessage(`${isWhiteTurn ? 'White' : 'Black'} is in check!`);
       }
@@ -120,6 +128,7 @@ const ChessGame = () => {
       if (!hasValidMove) {
         setIsGameOver(true);
         setMessage("Game over: Stalemate");
+        setGameResult("Stalemate");
       }
     }
   };
@@ -141,6 +150,7 @@ const ChessGame = () => {
     setIsGameOver(false);
     setPromotionPawn(null);
     setAvailableMoves([]);
+    setGameResult(null);
   };
 
   return (
@@ -162,6 +172,11 @@ const ChessGame = () => {
         )}
       </div>
       <p className="mb-4">{message}</p>
+      {gameResult && (
+        <p className="text-xl font-bold mb-4">
+          {gameResult === "You win" ? "Congratulations! You win!" : gameResult === "You lose" ? "Game over. You lose." : "Game over. It's a stalemate."}
+        </p>
+      )}
       <Button onClick={resetGame}>Reset Game</Button>
       {promotionPawn && (
         <div className="mt-4">
