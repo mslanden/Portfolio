@@ -13,9 +13,9 @@ const Index = () => {
       <header className="fixed top-0 left-0 w-full bg-white bg-opacity-80 z-50 p-4">
         <nav>
           <ul className="flex justify-center space-x-4">
-            {['About', 'Projects', 'Contact'].map((section) => (
+            {['AI Development', 'About', 'Projects', 'Contact'].map((section) => (
               <li key={section}>
-                <a href={`#${section.toLowerCase()}`} className="text-teal-600 hover:text-orange-500 transition-colors">
+                <a href={`#${section.toLowerCase().replace(' ', '-')}`} className="text-teal-600 hover:text-orange-500 transition-colors">
                   {section}
                 </a>
               </li>
@@ -24,6 +24,7 @@ const Index = () => {
         </nav>
       </header>
       <main>
+        <AIDevelopmentSection />
         <AboutSection />
         <ProjectsSection />
         <ContactSection />
@@ -32,6 +33,23 @@ const Index = () => {
     </div>
   );
 };
+
+const AIDevelopmentSection = () => (
+  <section id="ai-development" className="min-h-screen flex items-center justify-center snap-start bg-black p-8">
+    <div className="relative w-full max-w-4xl">
+      <img 
+        src="/ai-development.jpg" 
+        alt="AI Development" 
+        className="w-full h-auto rounded-lg shadow-2xl"
+      />
+      <div className="absolute inset-0 flex items-center justify-center">
+        <h1 className="text-5xl font-bold text-white text-center shadow-text">
+          AI Development
+        </h1>
+      </div>
+    </div>
+  </section>
+);
 
 const AboutSection = () => (
   <section id="about" className="min-h-screen flex items-center justify-center snap-start bg-gradient-to-br from-orange-100 to-teal-100 p-8">
