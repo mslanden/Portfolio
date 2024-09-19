@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { isValidMove, isInCheck, getBestMove, pawnPromotion, isDraw } from '../utils/chessUtils';
+import { motion, AnimatePresence } from "framer-motion";
 
 const initialBoard = [
   ['♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜'],
@@ -17,26 +18,28 @@ const ChessGame = () => {
   const [board, setBoard] = useState(initialBoard);
   const [selectedPiece, setSelectedPiece] = useState(null);
   const [isWhiteTurn, setIsWhiteTurn] = useState(true);
-  const [message, setMessage] = useState('Your turn (White)');
+  const [message, setMessage] = useState('White\'s turn');
   const [isGameOver, setIsGameOver] = useState(false);
   const [promotionPawn, setPromotionPawn] = useState(null);
   const [availableMoves, setAvailableMoves] = useState([]);
   const [gameResult, setGameResult] = useState(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [gameMode, setGameMode] = useState('ai'); // 'ai' or 'friend'
 
   useEffect(() => {
-    if (!isWhiteTurn && !isGameOver) {
+    if (!isWhiteTurn && !isGameOver && gameMode === 'ai') {
       setTimeout(makeAIMove, 500);
     }
-  }, [isWhiteTurn, isGameOver]);
+  }, [isWhiteTurn, isGameOver, gameMode]);
 
   const handleCellClick = (row, col) => {
-    if (isGameOver || !isWhiteTurn) return;
+    if (isGameOver || (gameMode === 'ai' && !isWhiteTurn)) return;
     selectedPiece ? movePiece(row, col) : selectPiece(row, col);
   };
 
   const selectPiece = (row, col) => {
     const piece = board[row][col];
-    if (piece && piece.charCodeAt(0) >= 9812 && piece.charCodeAt(0) <= 9817) {
+    if (piece && ((isWhiteTurn && piece.charCodeAt(0) <= 9817) || (!isWhiteTurn && piece.charCodeAt(0) >= 9818))) {
       setSelectedPiece({ row, col });
       setAvailableMoves(getAvailableMoves(row, col));
     }
@@ -49,7 +52,7 @@ const ChessGame = () => {
       newBoard[row][col] = piece;
       newBoard[selectedPiece.row][selectedPiece.col] = '';
 
-      if (!isInCheck(newBoard, true)) {
+      if (!isInCheck(newBoard, isWhiteTurn)) {
         setBoard(newBoard);
         piece === '♙' && row === 0 ? setPromotionPawn({ row, col }) : finishTurn(newBoard);
       } else {
@@ -71,7 +74,7 @@ const ChessGame = () => {
           const newBoard = board.map(r => [...r]);
           newBoard[i][j] = piece;
           newBoard[row][col] = '';
-          if (!isInCheck(newBoard, true)) {
+          if (!isInCheck(newBoard, isWhiteTurn)) {
             moves.push({ row: i, col: j });
           }
         }
@@ -81,9 +84,9 @@ const ChessGame = () => {
   };
 
   const finishTurn = (newBoard) => {
-    setIsWhiteTurn(false);
-    setMessage("AI's turn (Black)");
-    checkGameState(newBoard, false);
+    setIsWhiteTurn(!isWhiteTurn);
+    setMessage(isWhiteTurn ? "Black's turn" : "White's turn");
+    checkGameState(newBoard, !isWhiteTurn);
   };
 
   const makeAIMove = () => {
@@ -94,9 +97,7 @@ const ChessGame = () => {
       newBoard[endRow][endCol] = newBoard[startRow][startCol];
       newBoard[startRow][startCol] = '';
       setBoard(newBoard);
-      setIsWhiteTurn(true);
-      setMessage("Your turn (White)");
-      checkGameState(newBoard, true);
+      finishTurn(newBoard);
     } else {
       endGame("Game over: Stalemate", "Draw");
     }
@@ -106,7 +107,7 @@ const ChessGame = () => {
     if (isInCheck(newBoard, isWhiteTurn)) {
       const hasValidMove = getBestMove(newBoard, isWhiteTurn) !== null;
       if (!hasValidMove) {
-        endGame(isWhiteTurn ? "Checkmate! Black wins!" : "Checkmate! White wins!", isWhiteTurn ? "You lose" : "You win");
+        endGame(isWhiteTurn ? "Checkmate! Black wins!" : "Checkmate! White wins!", isWhiteTurn ? "Black wins" : "White wins");
       } else {
         setMessage(`${isWhiteTurn ? 'White' : 'Black'} is in check!`);
       }
@@ -137,11 +138,17 @@ const ChessGame = () => {
     setBoard(initialBoard);
     setSelectedPiece(null);
     setIsWhiteTurn(true);
-    setMessage('Your turn (White)');
+    setMessage('White\'s turn');
     setIsGameOver(false);
     setPromotionPawn(null);
     setAvailableMoves([]);
     setGameResult(null);
+    setIsMenuOpen(false);
+  };
+
+  const toggleGameMode = () => {
+    setGameMode(gameMode === 'ai' ? 'friend' : 'ai');
+    resetGame();
   };
 
   const getPieceColor = (piece) => {
@@ -154,6 +161,45 @@ const ChessGame = () => {
     const colors = ['bg-[#FFA500]', 'bg-[#FF8C00]', 'bg-[#FF4500]'];
     return colors[index];
   };
+
+  const Menu = () => (
+    <div className="flex items-center justify-center space-x-4">
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -50 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Button onClick={resetGame} className="bg-[#c24d2c] text-[#d9dad7] hover:bg-[#d9dad7] hover:text-[#1a2639]">
+              Reset Game
+            </Button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <Button
+        onClick={() => setIsMenuOpen(!isMenuOpen)}
+        className="bg-[#c24d2c] text-[#d9dad7] hover:bg-[#d9dad7] hover:text-[#1a2639]"
+      >
+        Menu
+      </Button>
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 50 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Button onClick={toggleGameMode} className="bg-[#c24d2c] text-[#d9dad7] hover:bg-[#d9dad7] hover:text-[#1a2639]">
+              {gameMode === 'ai' ? 'Play with Friend' : 'Play with AI'}
+            </Button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
 
   return (
     <div className="flex flex-col items-center">
@@ -176,12 +222,12 @@ const ChessGame = () => {
       <p className="mb-4 text-[#d9dad7]">{message}</p>
       {gameResult && (
         <p className="text-xl font-bold mb-4 text-[#c24d2c]">
-          {gameResult === "You win" ? "Congratulations! You win!" : 
-           gameResult === "You lose" ? "Game over. You lose." : 
+          {gameResult === "White wins" ? "Congratulations! White wins!" : 
+           gameResult === "Black wins" ? "Congratulations! Black wins!" : 
            "Game over. It's a draw."}
         </p>
       )}
-      <Button onClick={resetGame} className="bg-[#c24d2c] text-[#d9dad7] hover:bg-[#d9dad7] hover:text-[#1a2639]">Reset Game</Button>
+      <Menu />
       {promotionPawn && (
         <div className="mt-4">
           <p className="text-[#d9dad7]">Choose promotion piece:</p>
