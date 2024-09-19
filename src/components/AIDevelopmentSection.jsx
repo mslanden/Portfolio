@@ -16,8 +16,14 @@ const AIDevelopmentSection = () => (
         />
         <div>
           <motion.h2 
-            className="text-3xl sm:text-5xl font-bold mb-4 sm:mb-6 text-center sm:text-left text-[#c24d2c]"
-            style={{ fontFamily: "'Orbitron', sans-serif" }}
+            className="text-3xl sm:text-5xl font-bold mb-4 sm:mb-6 text-center sm:text-left"
+            style={{ 
+              fontFamily: "'Orbitron', sans-serif",
+              background: "linear-gradient(45deg, #00FFFF, #FF00FF)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              textShadow: "0 0 10px rgba(0, 255, 255, 0.5), 0 0 20px rgba(255, 0, 255, 0.5)"
+            }}
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
