@@ -5,7 +5,6 @@ import AIDevelopmentSection from '../components/AIDevelopmentSection';
 import AboutSection from '../components/AboutSection';
 import ProjectsSection from '../components/ProjectsSection';
 import ContactSection from '../components/ContactSection';
-import StarryBackground from '../components/StarryBackground';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState('ai-development');
@@ -44,8 +43,11 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen relative bg-[#0a0b1e]">
-      <StarryBackground />
+    <div className="min-h-screen relative">
+      <div 
+        className="fixed inset-0 bg-cover bg-center bg-no-repeat blur-sm opacity-50 z-0"
+        style={{ backgroundImage: "url('/ai-development.jpg')" }}
+      ></div>
       <div className="relative z-10">
         <ProfileBubble scrollToSection={scrollToSection} />
         <main>
@@ -53,7 +55,7 @@ const Index = () => {
             <Card 
               key={section.id}
               ref={sectionRefs[section.id]}
-              className="min-h-screen w-full bg-gradient-to-br from-[#0a0b1e] to-[#1a1b3a] text-[#e0e1ff] border-none shadow-lg"
+              className="min-h-screen w-full bg-gradient-to-br from-[#1a2639] to-[#3e4a61] text-[#d9dad7]"
             >
               <CardContent className="p-0 h-full">
                 {section.component}
