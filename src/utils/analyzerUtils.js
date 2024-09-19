@@ -3,6 +3,47 @@ const axios = require('axios');
 const lighthouse = require('lighthouse');
 const { URL } = require('url');
 
+// Mock function to generate random analysis data
+const analyzeMockWebsite = () => {
+  const randomScore = () => Math.floor(Math.random() * 100);
+  const randomCompanyData = () => ({
+    name: `Company ${Math.floor(Math.random() * 1000)}`,
+    url: `https://company${Math.floor(Math.random() * 1000)}.com`,
+    marketCap: Math.floor(Math.random() * 1000000000),
+    revenue: Math.floor(Math.random() * 100000000),
+    employees: Math.floor(Math.random() * 10000)
+  });
+
+  return {
+    url: 'https://example.com',
+    seoScore: randomScore(),
+    performanceScore: randomScore(),
+    accessibilityScore: randomScore(),
+    competitors: Array(3).fill().map(() => ({
+      name: `Competitor ${Math.floor(Math.random() * 100)}`,
+      url: `https://competitor${Math.floor(Math.random() * 100)}.com`
+    })),
+    competitorComparison: Array(4).fill().map((_, i) => ({
+      name: i === 0 ? 'Your Site' : `Competitor ${i}`,
+      seo: randomScore(),
+      performance: randomScore(),
+      accessibility: randomScore()
+    })),
+    businessPlan: {
+      strengths: ['Strong brand', 'Innovative products', 'Efficient operations'],
+      weaknesses: ['Limited market reach', 'High production costs'],
+      opportunities: ['Expanding to new markets', 'Developing new product lines'],
+      threats: ['Increasing competition', 'Changing consumer preferences']
+    },
+    marketValue: {
+      estimatedValue: Math.floor(Math.random() * 10000000),
+      factors: ['Brand recognition', 'Market share', 'Growth potential'],
+      potentialGrowth: Math.floor(Math.random() * 30)
+    },
+    similarCompanies: Array(3).fill().map(randomCompanyData)
+  };
+};
+
 // Function to run Lighthouse and get website performance metrics
 const getWebsiteMetrics = async (url, browser) => {
   const { lhr } = await lighthouse(url, {
@@ -85,3 +126,11 @@ const analyzeWebsite = async (url) => {
 analyzeWebsite('https://example.com').then((analysis) => {
   console.log(JSON.stringify(analysis, null, 2));
 });
+
+// Export the mock function along with any existing exports
+module.exports = {
+  analyzeMockWebsite,
+  analyzeWebsite,
+  getWebsiteMetrics,
+  scrapeCompetitors
+};
