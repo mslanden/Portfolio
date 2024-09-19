@@ -16,10 +16,10 @@ const MenuBubble = ({ scrollToSection }) => (
     <PopoverContent className="w-48 bg-[#1a2639] border-[#c24d2c] text-[#d9dad7]">
       <nav>
         <ul className="space-y-2">
-          {['Home', 'About', 'Projects', 'Contact'].map((section) => (
+          {['AI Development', 'About', 'Projects', 'Contact'].map((section) => (
             <li key={section}>
               <button
-                onClick={() => scrollToSection(section.toLowerCase())}
+                onClick={() => scrollToSection(section.toLowerCase().replace(' ', '-'))}
                 className="w-full text-left px-2 py-1 hover:bg-[#3e4a61] rounded transition-colors"
               >
                 {section}
