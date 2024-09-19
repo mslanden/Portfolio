@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
-import MainMenu from '../components/MainMenu';
+import ProfileBubble from '../components/ProfileBubble';
 import AIDevelopmentSection from '../components/AIDevelopmentSection';
-import ProjectsSection from '../components/ProjectsSection';
 import AboutSection from '../components/AboutSection';
+import ProjectsSection from '../components/ProjectsSection';
 import ContactSection from '../components/ContactSection';
 
 const Index = () => {
@@ -50,13 +50,13 @@ const Index = () => {
       ></div>
       <div className="fixed inset-0 bg-black bg-opacity-50 z-10"></div>
       <div className="relative z-20">
-        <MainMenu activeSection={activeSection} scrollToSection={scrollToSection} />
-        <main className="pt-16"> {/* Add padding-top to account for the fixed menu */}
+        <ProfileBubble scrollToSection={scrollToSection} />
+        <main>
           {sections.map((section) => (
             <div 
               key={section.id}
               ref={sectionRefs[section.id]}
-              className="min-h-screen w-full snap-start snap-always"
+              className="h-screen w-full snap-start snap-always"
             >
               <Card className="h-full w-full bg-transparent text-white">
                 <CardContent className="p-0 h-full">
