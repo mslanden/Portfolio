@@ -1,22 +1,22 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import MenuBubble from '../components/MenuBubble';
-import AIDevelopmentSection from '../components/AIDevelopmentSection';
+import HomeSection from '../components/HomeSection';
 import AboutSection from '../components/AboutSection';
 import ProjectsSection from '../components/ProjectsSection';
 import ContactSection from '../components/ContactSection';
 
 const Index = () => {
-  const [activeSection, setActiveSection] = useState('ai-development');
+  const [activeSection, setActiveSection] = useState('home');
   const sectionRefs = {
-    'ai-development': useRef(null),
+    'home': useRef(null),
     'projects': useRef(null),
     'about': useRef(null),
     'contact': useRef(null),
   };
 
   const sections = [
-    { id: 'ai-development', title: 'AI-Driven Innovations', component: <AIDevelopmentSection /> },
+    { id: 'home', title: 'Home', component: <HomeSection /> },
     { id: 'projects', title: 'Projects', component: <ProjectsSection /> },
     { id: 'about', title: 'About', component: <AboutSection /> },
     { id: 'contact', title: 'Contact', component: <ContactSection /> },
