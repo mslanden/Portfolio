@@ -7,7 +7,7 @@ const MenuBubble = ({ scrollToSection }) => (
   <Popover>
     <PopoverTrigger asChild>
       <Button 
-        className="w-12 h-12 rounded-full fixed top-4 left-4 z-50 bg-[#1a2639] hover:bg-[#3e4a61] transition-all duration-300"
+        className="w-12 h-12 rounded-full fixed top-4 left-4 z-50 bg-[#1a2639] hover:bg-[#3e4a61] transition-all duration-300 border-2 border-[#c24d2c] opacity-85"
         size="icon"
       >
         <MenuIcon className="h-6 w-6 text-[#d9dad7]" />
