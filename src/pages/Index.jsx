@@ -43,7 +43,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen relative overflow-y-scroll snap-y snap-mandatory">
+    <div className="h-screen overflow-y-scroll snap-y snap-mandatory">
       <div 
         className="fixed inset-0 bg-cover bg-center bg-no-repeat z-0"
         style={{ backgroundImage: "url('/ai-development.jpg')" }}
@@ -53,15 +53,17 @@ const Index = () => {
         <ProfileBubble scrollToSection={scrollToSection} />
         <main>
           {sections.map((section) => (
-            <Card 
+            <div 
               key={section.id}
               ref={sectionRefs[section.id]}
-              className="min-h-screen w-full bg-transparent text-white snap-start snap-always"
+              className="h-screen w-full snap-start snap-always"
             >
-              <CardContent className="p-0 h-full">
-                {section.component}
-              </CardContent>
-            </Card>
+              <Card className="h-full w-full bg-transparent text-white">
+                <CardContent className="p-0 h-full">
+                  {section.component}
+                </CardContent>
+              </Card>
+            </div>
           ))}
         </main>
       </div>
