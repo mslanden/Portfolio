@@ -43,7 +43,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen relative">
+    <div className="min-h-screen relative overflow-y-scroll snap-y snap-mandatory">
       <div 
         className="fixed inset-0 bg-cover bg-center bg-no-repeat z-0"
         style={{ backgroundImage: "url('/ai-development.jpg')" }}
@@ -56,7 +56,7 @@ const Index = () => {
             <Card 
               key={section.id}
               ref={sectionRefs[section.id]}
-              className="min-h-screen w-full bg-transparent text-white"
+              className="min-h-screen w-full bg-transparent text-white snap-start snap-always"
             >
               <CardContent className="p-0 h-full">
                 {section.component}
