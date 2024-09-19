@@ -45,7 +45,7 @@ const Index = () => {
 
   const cardVariants = {
     hidden: { opacity: 0, x: '100%' },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: 'easeOut' } }
+    visible: { opacity: 1, x: 0, transition: { type: 'spring', stiffness: 80, damping: 20 } }
   };
 
   return (
