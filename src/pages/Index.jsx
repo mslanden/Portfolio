@@ -16,7 +16,7 @@ const Index = () => {
   };
 
   const sections = [
-    { id: 'ai-development', title: 'AI Development', component: <AIDevelopmentSection /> },
+    { id: 'ai-development', title: 'AI-Driven Innovations', component: <AIDevelopmentSection /> },
     { id: 'about', title: 'About', component: <AboutSection /> },
     { id: 'projects', title: 'Projects', component: <ProjectsSection /> },
     { id: 'contact', title: 'Contact', component: <ContactSection /> },
