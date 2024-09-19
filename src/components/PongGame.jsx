@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import PongCanvas from './PongCanvas';
 import PongScoreboard from './PongScoreboard';
+import { createParticles } from '../utils/particleUtils';
 
 const CANVAS_WIDTH = 800;
 const CANVAS_HEIGHT = 400;
@@ -26,7 +27,6 @@ const PongGame = () => {
       velocityY: 5,
     },
     particles: [],
-    explosions: [],
   });
 
   useEffect(() => {
@@ -36,7 +36,7 @@ const PongGame = () => {
   }, [gameStarted]);
 
   const updateGame = () => {
-    const { ball, paddle } = gameStateRef.current;
+    const { ball, paddle, particles } = gameStateRef.current;
 
     // Update ball position
     ball.x += ball.velocityX;
@@ -57,10 +57,18 @@ const PongGame = () => {
       ball.velocityX = direction * ball.speed * Math.cos(angleRad);
       ball.velocityY = ball.speed * Math.sin(angleRad);
       ball.speed += 0.1;
+
+      // Create particles on paddle hit
+      gameStateRef.current.particles = [
+        ...particles,
+        ...createParticles(ball.x, ball.y, 10)
+      ];
     }
 
     // AI paddle movement
     paddle.computer.y += (ball.y - (paddle.computer.y + paddle.height / 2)) * 0.1;
+    // Prevent computer paddle from going through the sides
+    paddle.computer.y = Math.max(0, Math.min(CANVAS_HEIGHT - paddle.height, paddle.computer.y));
 
     // Score update
     if (ball.x - ball.radius < 0) {
@@ -70,6 +78,16 @@ const PongGame = () => {
       setScore(prev => ({ ...prev, player: prev.player + 1 }));
       resetBall();
     }
+
+    // Update particles
+    gameStateRef.current.particles = particles
+      .map(p => ({
+        ...p,
+        x: p.x + p.speedX,
+        y: p.y + p.speedY,
+        life: p.life - 1
+      }))
+      .filter(p => p.life > 0);
   };
 
   const resetBall = () => {

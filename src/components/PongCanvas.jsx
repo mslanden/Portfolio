@@ -10,7 +10,7 @@ const PongCanvas = ({ width, height, gameState, handleMouseMove }) => {
       context.fillStyle = '#1a2639';
       context.fillRect(0, 0, width, height);
 
-      const { ball, paddle } = gameState;
+      const { ball, paddle, particles } = gameState;
 
       // Draw paddles
       context.fillStyle = '#c24d2c';
@@ -32,6 +32,15 @@ const PongCanvas = ({ width, height, gameState, handleMouseMove }) => {
       context.strokeStyle = '#3e4a61';
       context.stroke();
       context.closePath();
+
+      // Draw particles
+      particles.forEach(p => {
+        context.beginPath();
+        context.arc(p.x, p.y, p.size, 0, Math.PI * 2, false);
+        context.fillStyle = p.color;
+        context.fill();
+        context.closePath();
+      });
 
       requestAnimationFrame(render);
     };
