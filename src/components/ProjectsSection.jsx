@@ -34,7 +34,7 @@ const ProjectsSection = () => (
 );
 
 const ProjectCard = ({ title, description, children }) => (
-  <Card className="bg-[#d9dad7] bg-opacity-10 border-2 border-[#c24d2c] shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+  <Card className="bg-[#1a2639] bg-opacity-80 border-2 border-[#c24d2c] shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
     <CardHeader>
       <CardTitle className="text-2xl font-semibold text-[#c24d2c]">{title}</CardTitle>
       <CardDescription className="text-[#d9dad7] text-base">{description}</CardDescription>
