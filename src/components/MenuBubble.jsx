@@ -42,7 +42,7 @@ const MenuBubble = ({ scrollToSection }) => {
           <MenuIcon className="h-6 w-6 text-[#d9dad7]" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-48 p-0 bg-transparent border-none shadow-none">
+      <PopoverContent className="w-56 p-4 bg-transparent border-none shadow-none" side="left" align="start" sideOffset={20}>
         <AnimatePresence>
           {isOpen && (
             <motion.nav
@@ -51,7 +51,7 @@ const MenuBubble = ({ scrollToSection }) => {
               animate="visible"
               exit="hidden"
             >
-              <ul className="space-y-2">
+              <ul className="space-y-3">
                 {menuItems.map((section, index) => (
                   <motion.li key={section} variants={bubbleVariants}>
                     <motion.button
