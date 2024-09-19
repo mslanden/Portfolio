@@ -1,8 +1,3 @@
-const puppeteer = require('puppeteer');
-const axios = require('axios');
-const lighthouse = require('lighthouse');
-const { URL } = require('url');
-
 // Mock function to generate random analysis data
 const analyzeMockWebsite = () => {
   const randomScore = () => Math.floor(Math.random() * 100);
@@ -46,49 +41,32 @@ const analyzeMockWebsite = () => {
 
 // Function to run Lighthouse and get website performance metrics
 const getWebsiteMetrics = async (url, browser) => {
-  const { lhr } = await lighthouse(url, {
-    port: new URL(browser.wsEndpoint()).port,
-    output: 'json',
-    logLevel: 'info',
-  });
-
+  // Mocking the Lighthouse results
   return {
-    seoScore: lhr.categories.seo.score * 100,
-    performanceScore: lhr.categories.performance.score * 100,
-    accessibilityScore: lhr.categories.accessibility.score * 100,
+    seoScore: Math.floor(Math.random() * 100),
+    performanceScore: Math.floor(Math.random() * 100),
+    accessibilityScore: Math.floor(Math.random() * 100),
   };
 };
 
-// Function to scrape competitors using a specific keyword search or using a website like 'similarweb.com'
+// Function to scrape competitors (mocked)
 const scrapeCompetitors = async (query) => {
-  const searchUrl = `https://www.similarweb.com/website/${query}`;
-  
-  // Basic web scraping using axios and cheerio (if you need more complex data handling, you can switch to Puppeteer)
-  const response = await axios.get(searchUrl);
-  // Parse the response here using cheerio or another method to get competitor names and URLs
-  const competitors = [
+  return [
     { name: 'Competitor A', url: 'https://competitora.com' },
     { name: 'Competitor B', url: 'https://competitorb.com' },
     { name: 'Competitor C', url: 'https://competitorc.com' },
   ];
-
-  return competitors;
 };
 
-// Main function to analyze a website
+// Main function to analyze a website (mocked)
 const analyzeWebsite = async (url) => {
-  const browser = await puppeteer.launch({ headless: true });
+  // Mocking the analysis process
+  const metrics = await getWebsiteMetrics(url);
+  const competitors = await scrapeCompetitors(url);
 
-  // Get website metrics
-  const metrics = await getWebsiteMetrics(url, browser);
-
-  // Scrape competitors based on the website's domain or niche
-  const competitors = await scrapeCompetitors('example.com');
-
-  // Gather competitor comparison data
   const competitorComparison = await Promise.all(
     competitors.map(async (competitor) => {
-      const competitorMetrics = await getWebsiteMetrics(competitor.url, browser);
+      const competitorMetrics = await getWebsiteMetrics(competitor.url);
       return {
         name: competitor.name,
         ...competitorMetrics,
@@ -96,7 +74,6 @@ const analyzeWebsite = async (url) => {
     })
   );
 
-  // Mock business plan and market value (this can be calculated based on various business-specific metrics)
   const businessPlan = {
     strengths: ['Strong SEO', 'High performance', 'Good accessibility'],
     weaknesses: ['Limited content', 'Lack of social media integration'],
@@ -110,8 +87,6 @@ const analyzeWebsite = async (url) => {
     potentialGrowth: 15,
   };
 
-  await browser.close();
-
   return {
     url,
     ...metrics,
@@ -122,13 +97,8 @@ const analyzeWebsite = async (url) => {
   };
 };
 
-// Example usage:
-analyzeWebsite('https://example.com').then((analysis) => {
-  console.log(JSON.stringify(analysis, null, 2));
-});
-
-// Export the mock function along with any existing exports
-module.exports = {
+// Export all functions
+export {
   analyzeMockWebsite,
   analyzeWebsite,
   getWebsiteMetrics,
