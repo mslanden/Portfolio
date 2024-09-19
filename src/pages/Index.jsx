@@ -35,18 +35,23 @@ const Index = () => {
 };
 
 const AIDevelopmentSection = () => (
-  <section id="ai-development" className="min-h-screen flex items-center justify-center snap-start bg-black p-8">
-    <div className="relative w-full max-w-4xl">
-      <img 
-        src="/ai-development.jpg"  
-        className="w-full h-auto rounded-lg shadow-2xl"
-      />
-      <div className="absolute inset-0 flex items-center justify-center">
-        <h1 className="text-5xl font-bold text-white text-center shadow-text">
-          AI Development
-        </h1>
-      </div>
-    </div>
+  <section id="ai-development" className="min-h-screen flex items-center justify-center snap-start p-8">
+    <Card className="w-full h-full max-w-7xl mx-auto overflow-hidden">
+      <CardContent className="p-0 relative h-full">
+        <div className="absolute inset-0 bg-gradient-to-br from-black via-transparent to-black opacity-50"></div>
+        <img 
+          src="/ai-development.jpg"  
+          className="w-full h-full object-cover"
+          alt="AI Development"
+        />
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-8">
+          <h1 className="text-5xl font-bold mb-4 text-center">AI Development</h1>
+          <p className="text-xl text-center max-w-2xl">
+            Exploring the frontiers of artificial intelligence and its applications in modern technology.
+          </p>
+        </div>
+      </CardContent>
+    </Card>
   </section>
 );
 
