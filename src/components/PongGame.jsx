@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import PongCanvas from './PongCanvas';
 import PongScoreboard from './PongScoreboard';
-import DifficultyMenu from './DifficultyMenu';
 import { createParticles } from '../utils/particleUtils';
 
 const CANVAS_WIDTH = 800;
@@ -11,7 +10,6 @@ const CANVAS_HEIGHT = 400;
 const PongGame = () => {
   const [gameStarted, setGameStarted] = useState(false);
   const [score, setScore] = useState({ player: 0, computer: 0 });
-  const [difficulty, setDifficulty] = useState('medium');
   const gameStateRef = useRef({
     paddle: {
       width: 10,
@@ -68,10 +66,7 @@ const PongGame = () => {
     }
 
     // AI paddle movement
-    const aiSpeed = getAISpeed();
-    const aiMovement = (ball.y - (paddle.computer.y + paddle.height / 2)) * aiSpeed;
-    paddle.computer.y += aiMovement;
-    
+    paddle.computer.y += (ball.y - (paddle.computer.y + paddle.height / 2)) * 0.1;
     // Prevent computer paddle from going through the sides
     paddle.computer.y = Math.max(0, Math.min(CANVAS_HEIGHT - paddle.height, paddle.computer.y));
 
@@ -118,21 +113,6 @@ const PongGame = () => {
     gameStateRef.current.paddle.player.y = Math.max(0, Math.min(CANVAS_HEIGHT - gameStateRef.current.paddle.height, mouseY - gameStateRef.current.paddle.height / 2));
   };
 
-  const getAISpeed = () => {
-    switch (difficulty) {
-      case 'easy':
-        return 0.05;
-      case 'hard':
-        return 0.15;
-      default:
-        return 0.1;
-    }
-  };
-
-  const handleDifficultyChange = (newDifficulty) => {
-    setDifficulty(newDifficulty);
-  };
-
   return (
     <div className="flex flex-col items-center space-y-4">
       <PongCanvas
@@ -142,7 +122,6 @@ const PongGame = () => {
         handleMouseMove={handleMouseMove}
       />
       <PongScoreboard score={score} />
-      <DifficultyMenu difficulty={difficulty} onDifficultyChange={handleDifficultyChange} />
       <Button
         className="px-4 py-2 bg-[#c24d2c] text-[#d9dad7] rounded hover:bg-[#d9dad7] hover:text-[#1a2639] transition-colors"
         onClick={() => setGameStarted(!gameStarted)}
