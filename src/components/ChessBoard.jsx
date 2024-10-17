@@ -3,7 +3,7 @@ import React from 'react';
 const ChessBoard = ({ board, selectedPiece, availableMoves, handleCellClick }) => {
   const getPieceStyle = (piece) => {
     const isWhitePiece = piece.charCodeAt(0) <= 9817;
-    return `text-${isWhitePiece ? '[#FFFFFF]' : '[#000000]'} drop-shadow-[0_1px_2px_rgba(${isWhitePiece ? '0,0,0,0.8' : '255,255,255,0.8'})]`;
+    return `text-${isWhitePiece ? '[#0000FF]' : '[#000000]'} drop-shadow-[0_1px_2px_rgba(${isWhitePiece ? '0,0,255,0.8' : '0,0,0,0.8'})]`;
   };
 
   const getAvailableMoveColor = () => 'bg-[#4CAF50]';
@@ -26,7 +26,7 @@ const ChessBoard = ({ board, selectedPiece, availableMoves, handleCellClick }) =
                 className={`${getPieceStyle(cell)} transition-all duration-200 hover:scale-110`}
                 style={{
                   fontFamily: "'Noto Sans', 'Segoe UI Symbol', 'Arial Unicode MS', sans-serif",
-                  textShadow: cell.charCodeAt(0) <= 9817 ? '0 0 3px rgba(0,0,0,0.8)' : '0 0 3px rgba(255,255,255,0.8)',
+                  textShadow: cell.charCodeAt(0) <= 9817 ? '0 0 3px rgba(0,0,255,0.8)' : '0 0 3px rgba(0,0,0,0.8)',
                 }}
               >
                 {cell}
