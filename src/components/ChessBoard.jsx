@@ -9,12 +9,16 @@ const ChessBoard = ({ board, selectedPiece, availableMoves, handleCellClick }) =
   const getAvailableMoveColor = () => 'bg-[#4CAF50]';
   const getSelectedPieceColor = () => 'bg-[#2E7D32]'; // Darker green for selected piece
 
+  const chessPieces = {
+    '♙': '♟', '♟': '♟', // Pawn
+    '♖': '♜', '♜': '♜', // Rook
+    '♘': '♞', '♞': '♞', // Knight
+    '♗': '♝', '♝': '♝', // Bishop
+    '♕': '♛', '♛': '♛', // Queen
+    '♔': '♚', '♚': '♚'  // King
+  };
+
   const renderPiece = (piece) => {
-    // Use a consistent font family for chess pieces
-    const chessPieces = {
-      '♙': '♙', '♟': '♟', '♖': '♖', '♜': '♜', '♘': '♘', '♞': '♞',
-      '♗': '♗', '♝': '♝', '♕': '♕', '♛': '♛', '♔': '♔', '♚': '♚'
-    };
     return chessPieces[piece] || piece;
   };
 
