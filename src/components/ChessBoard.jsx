@@ -9,19 +9,6 @@ const ChessBoard = ({ board, selectedPiece, availableMoves, handleCellClick }) =
   const getAvailableMoveColor = () => 'bg-[#4CAF50]';
   const getSelectedPieceColor = () => 'bg-[#2E7D32]'; // Darker green for selected piece
 
-  const chessPieces = {
-    '♙': '♟', '♟': '♟', // Pawn
-    '♖': '♜', '♜': '♜', // Rook
-    '♘': '♞', '♞': '♞', // Knight
-    '♗': '♝', '♝': '♝', // Bishop
-    '♕': '♛', '♛': '♛', // Queen
-    '♔': '♚', '♚': '♚'  // King
-  };
-
-  const renderPiece = (piece) => {
-    return chessPieces[piece] || piece;
-  };
-
   return (
     <div className="w-full max-w-[min(64vw,400px)] aspect-square mx-auto">
       <div className="grid grid-cols-8 gap-0.5 p-2 bg-[#3e4a61] rounded-lg shadow-lg">
@@ -42,7 +29,7 @@ const ChessBoard = ({ board, selectedPiece, availableMoves, handleCellClick }) =
                   textShadow: cell.charCodeAt(0) <= 9817 ? '0 0 3px rgba(0,0,0,0.8)' : '0 0 3px rgba(255,255,255,0.8)',
                 }}
               >
-                {renderPiece(cell)}
+                {cell}
               </span>
             </div>
           ))
