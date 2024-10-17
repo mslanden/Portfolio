@@ -2,12 +2,11 @@ import React from 'react';
 
 const ChessBoard = ({ board, selectedPiece, availableMoves, handleCellClick }) => {
   const getPieceStyle = (piece) => {
-    const isWhitePiece = piece.charCodeAt(0) >= 9812 && piece.charCodeAt(0) <= 9817;
-    const isBlackPiece = piece.charCodeAt(0) >= 9818 && piece.charCodeAt(0) <= 9823;
-    if (isWhitePiece) {
-      return `text-[#0000FF] drop-shadow-[0_1px_2px_rgba(0,0,255,0.8)]`;
-    } else if (isBlackPiece) {
-      return `text-[#000000] drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]`;
+    const pieceCode = piece.charCodeAt(0);
+    if (pieceCode >= 9812 && pieceCode <= 9817) {
+      return 'text-[#0000FF] drop-shadow-[0_1px_2px_rgba(0,0,255,0.8)]';
+    } else if (pieceCode >= 9818 && pieceCode <= 9823) {
+      return 'text-[#000000] drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]';
     }
     return '';
   };
