@@ -2,8 +2,14 @@ import React from 'react';
 
 const ChessBoard = ({ board, selectedPiece, availableMoves, handleCellClick }) => {
   const getPieceStyle = (piece) => {
-    const isWhitePiece = piece.charCodeAt(0) <= 9817;
-    return `text-${isWhitePiece ? '[#0000FF]' : '[#000000]'} drop-shadow-[0_1px_2px_rgba(${isWhitePiece ? '0,0,255,0.8' : '0,0,0,0.8'})]`;
+    const isWhitePiece = piece.charCodeAt(0) >= 9812 && piece.charCodeAt(0) <= 9817;
+    const isBlackPiece = piece.charCodeAt(0) >= 9818 && piece.charCodeAt(0) <= 9823;
+    if (isWhitePiece) {
+      return `text-[#0000FF] drop-shadow-[0_1px_2px_rgba(0,0,255,0.8)]`;
+    } else if (isBlackPiece) {
+      return `text-[#000000] drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]`;
+    }
+    return '';
   };
 
   const getAvailableMoveColor = () => 'bg-[#4CAF50]';
@@ -26,7 +32,6 @@ const ChessBoard = ({ board, selectedPiece, availableMoves, handleCellClick }) =
                 className={`${getPieceStyle(cell)} transition-all duration-200 hover:scale-110`}
                 style={{
                   fontFamily: "'Noto Sans', 'Segoe UI Symbol', 'Arial Unicode MS', sans-serif",
-                  textShadow: cell.charCodeAt(0) <= 9817 ? '0 0 3px rgba(0,0,255,0.8)' : '0 0 3px rgba(0,0,0,0.8)',
                 }}
               >
                 {cell}
