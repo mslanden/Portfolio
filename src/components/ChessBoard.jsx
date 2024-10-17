@@ -4,9 +4,9 @@ const ChessBoard = ({ board, selectedPiece, availableMoves, handleCellClick }) =
   const getPieceStyle = (piece) => {
     const pieceCode = piece.charCodeAt(0);
     if (pieceCode >= 9812 && pieceCode <= 9817) {
-      return 'text-[#0000FF] drop-shadow-[0_1px_2px_rgba(0,0,255,0.8)]';
+      return 'text-[#0000FF]'; // Blue color for white pieces
     } else if (pieceCode >= 9818 && pieceCode <= 9823) {
-      return 'text-[#000000] drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]';
+      return 'text-[#000000]'; // Black color for black pieces
     }
     return '';
   };
