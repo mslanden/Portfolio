@@ -2,17 +2,21 @@ import React from 'react';
 
 const ChessBoard = ({ board, selectedPiece, availableMoves, handleCellClick }) => {
   const getPieceStyle = (piece) => {
-    const pieceCode = piece.charCodeAt(0);
-    if (pieceCode >= 9812 && pieceCode <= 9817) {
-      return 'text-[#0000FF]'; // Blue color for white pieces
-    } else if (pieceCode >= 9818 && pieceCode <= 9823) {
-      return 'text-[#000000]'; // Black color for black pieces
-    }
-    return '';
+    const isWhitePiece = piece.charCodeAt(0) <= 9817;
+    return `text-${isWhitePiece ? '[#FFFFFF]' : '[#000000]'} drop-shadow-[0_1px_2px_rgba(${isWhitePiece ? '0,0,0,0.8' : '255,255,255,0.8'})]`;
   };
 
   const getAvailableMoveColor = () => 'bg-[#4CAF50]';
   const getSelectedPieceColor = () => 'bg-[#2E7D32]'; // Darker green for selected piece
+
+  const renderPiece = (piece) => {
+    // Use a consistent font family for chess pieces
+    const chessPieces = {
+      '♙': '♙', '♟': '♟', '♖': '♖', '♜': '♜', '♘': '♘', '♞': '♞',
+      '♗': '♗', '♝': '♝', '♕': '♕', '♛': '♛', '♔': '♔', '♚': '♚'
+    };
+    return chessPieces[piece] || piece;
+  };
 
   return (
     <div className="w-full max-w-[min(64vw,400px)] aspect-square mx-auto">
@@ -31,9 +35,10 @@ const ChessBoard = ({ board, selectedPiece, availableMoves, handleCellClick }) =
                 className={`${getPieceStyle(cell)} transition-all duration-200 hover:scale-110`}
                 style={{
                   fontFamily: "'Noto Sans', 'Segoe UI Symbol', 'Arial Unicode MS', sans-serif",
+                  textShadow: cell.charCodeAt(0) <= 9817 ? '0 0 3px rgba(0,0,0,0.8)' : '0 0 3px rgba(255,255,255,0.8)',
                 }}
               >
-                {cell}
+                {renderPiece(cell)}
               </span>
             </div>
           ))
