@@ -36,7 +36,7 @@ const AIDevelopmentSection = () => (
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            I create AI Agents, LLMs, dynamic websites, and games—using AI to streamline processes and enhance productivity. Explore my work and see how AI can transform your vision into reality.
+            I specialize in creating AI agents, leveraging Python and LLMs to streamline processes and boost productivity. Explore my work to see how advanced AI solutions can bring your ideas to life.
           </motion.p>
         </div>
       </CardContent>
